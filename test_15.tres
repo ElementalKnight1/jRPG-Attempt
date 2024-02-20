@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=2 format=3 uid="uid://ds6uwq4ev6631"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_jhysf"]
+
+[resource]
+script = ExtResource("1_jhysf")
+character_name = ""
+character_class_name = ""
+level = 1
+experience = 0
+agility = 15
+charisma = 15
+initiative = 15
+knowledge = 15
+perception = 15
+skill = 15
+spirit = 15
+strength = 15
+vitality = 15
+willpower = 15
+HP = 100
+HPmax = 100
+MP = 100
+MPmax = 100
+SP = 100
+SPmax = 100
+EquipHandL = []
+EquipHandR = []
+EquipHead = []
+EquipBody = []
+EquipLegs = []
+EquipAccessory1 = []
+EquipAccessory2 = []
+Personality = ""
+Gender = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

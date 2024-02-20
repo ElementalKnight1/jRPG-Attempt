@@ -1,0 +1,40 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cg2i6vyphinmu"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_vobvc"]
+
+[resource]
+script = ExtResource("1_vobvc")
+character_type = "hero"
+character_name = "Testy McTest"
+character_class_name = ""
+level = 30
+experience = 0
+agility = 30
+charisma = 30
+initiative = 30
+knowledge = 30
+perception = 30
+skill = 30
+spirit = 30
+strength = 30
+vitality = 30
+willpower = 30
+HP = 300
+HPmax = 300
+MP = 300
+MPmax = 300
+SP = 300
+SPmax = 300
+EquipHandL = []
+EquipHandR = []
+EquipHead = []
+EquipBody = []
+EquipLegs = []
+EquipAccessory1 = []
+EquipAccessory2 = []
+Personality = ""
+Gender = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

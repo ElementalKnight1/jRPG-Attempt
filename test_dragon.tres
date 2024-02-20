@@ -1,0 +1,40 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cg2i6vyphinmu"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_vobvc"]
+
+[resource]
+script = ExtResource("1_vobvc")
+character_type = "enemy"
+character_name = "Red Dragon"
+character_class_name = ""
+level = 20
+experience = 0
+agility = 20
+charisma = 20
+initiative = 20
+knowledge = 20
+perception = 20
+skill = 20
+spirit = 20
+strength = 20
+vitality = 20
+willpower = 20
+HP = 200
+HPmax = 200
+MP = 200
+MPmax = 200
+SP = 200
+SPmax = 200
+EquipHandL = []
+EquipHandR = []
+EquipHead = []
+EquipBody = []
+EquipLegs = []
+EquipAccessory1 = []
+EquipAccessory2 = []
+Personality = ""
+Gender = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

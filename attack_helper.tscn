@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx7nk2s07d5ya"]
+
+[ext_resource type="Script" path="res://AttackHelper.gd" id="1_7j7a7"]
+
+[node name="AttackHelper" type="Node"]
+script = ExtResource("1_7j7a7")

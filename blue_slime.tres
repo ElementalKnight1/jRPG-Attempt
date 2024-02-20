@@ -1,0 +1,36 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b11lg8udnxxaq"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_fjkkb"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_fjkkb")
+character_type = "enemy"
+character_name = "Blue Slime"
+character_class_name = ""
+level = 2
+experience = 2
+agility = 2
+charisma = 2
+initiative = 2
+knowledge = 2
+perception = 2
+skill = 2
+spirit = 2
+strength = 2
+vitality = 2
+willpower = 2
+HP = 20
+HPmax = 20
+MP = 20
+MPmax = 20
+SP = 20
+SPmax = 20
+Equipment = {}
+Personality = ""
+Gender = ""
+sprite_override = "res://sprites/enemies/slime_large.png"
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

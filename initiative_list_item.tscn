@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3r6ojuxmcu6n"]
+
+[ext_resource type="Theme" uid="uid://c0l5ug7556gea" path="res://damage_popup_theme.tres" id="1_d150o"]
+[ext_resource type="Script" path="res://initiative_list_item.gd" id="1_j1s8p"]
+
+[node name="Initiative_List_Item" type="HBoxContainer"]
+offset_right = 256.0
+offset_bottom = 40.0
+script = ExtResource("1_j1s8p")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme = ExtResource("1_d150o")
+text = "TEST"
+horizontal_alignment = 2
+vertical_alignment = 1

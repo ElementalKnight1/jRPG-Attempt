@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://cdi0305spnsv3"]
+
+[ext_resource type="Script" path="res://dialogue_window.gd" id="1_3di6s"]
+[ext_resource type="Texture2D" uid="uid://cqx7mqdp2v5mv" path="res://sprites/UI/DialogueWindowTemplate01.png" id="1_6k6lh"]
+[ext_resource type="FontFile" uid="uid://sv8kr4vmcsft" path="res://fonts/ManaSeedTitle.ttf" id="2_wjb5g"]
+
+[sub_resource type="Theme" id="Theme_vqhm3"]
+default_font = ExtResource("2_wjb5g")
+default_font_size = 16
+
+[node name="DialogueWindow" type="Control"]
+layout_mode = 3
+anchor_left = -0.178
+anchor_right = 0.178
+anchor_bottom = 0.267
+offset_left = 128.16
+offset_right = -128.16
+offset_bottom = -128.16
+script = ExtResource("1_3di6s")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = -24.0
+offset_right = 320.0
+offset_bottom = 24.0
+grow_horizontal = 2
+texture = ExtResource("1_6k6lh")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="DialogueText" type="RichTextLabel" parent="NinePatchRect"]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 624.0
+offset_bottom = 40.0
+theme = SubResource("Theme_vqhm3")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 1
+bbcode_enabled = true
+text = "[center]Test[/center]"
+fit_content = true
+scroll_active = false
+
+[node name="LifetimeTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="LifetimeTimer" to="." method="_on_lifetime_timer_timeout"]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://dw2d2p1hrlbrr"]
+
+[ext_resource type="Texture2D" uid="uid://i4yh82dhwc1j" path="res://sprites/effects/impact/A200-1.png" id="1_345cr"]
+[ext_resource type="Texture2D" uid="uid://bg2tpugbi1h6k" path="res://sprites/effects/impact/A200-2.png" id="2_3j76e"]
+[ext_resource type="Texture2D" uid="uid://dcxqj74ldev08" path="res://sprites/effects/impact/A200-3.png" id="3_xfmau"]
+[ext_resource type="Texture2D" uid="uid://dgyc5i1rt3vht" path="res://sprites/effects/impact/A200-4.png" id="4_nt7eo"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t6l8b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_345cr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3j76e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_xfmau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_nt7eo")
+}],
+"loop": false,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="fx_impact_01" type="AnimatedSprite2D"]
+position = Vector2(9.53674e-07, 9.53674e-07)
+scale = Vector2(0.15625, 0.15625)
+sprite_frames = SubResource("SpriteFrames_t6l8b")
+autoplay = "default"

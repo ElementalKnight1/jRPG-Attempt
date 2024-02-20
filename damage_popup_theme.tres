@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c0l5ug7556gea"]
+
+[ext_resource type="FontFile" uid="uid://c6bv3ci6lmkv0" path="res://fonts/ManaSeedTitleMono.ttf" id="1_jho7k"]
+
+[resource]
+default_font = ExtResource("1_jho7k")

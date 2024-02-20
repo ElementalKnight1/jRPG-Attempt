@@ -1,0 +1,35 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cg2i6vyphinmu"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_vobvc"]
+
+[resource]
+script = ExtResource("1_vobvc")
+character_type = "enemy"
+character_name = "TEST Dragon 02"
+character_class_name = ""
+level = 5
+experience = 0
+agility = 10
+charisma = 10
+initiative = 10
+knowledge = 10
+perception = 10
+skill = 10
+spirit = 10
+strength = 10
+vitality = 10
+willpower = 10
+HP = 100
+HPmax = 100
+MP = 100
+MPmax = 100
+SP = 100
+SPmax = 100
+Equipment = {}
+Personality = ""
+Gender = ""
+sprite_override = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

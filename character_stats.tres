@@ -1,0 +1,40 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b7pibj6jxya3x"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_s0l82"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_s0l82")
+character_name = "Mr. Thirty"
+character_class_name = ""
+level = 50
+experience = 50
+agility = 50
+charisma = 50
+initiative = 50
+knowledge = 50
+perception = 50
+skill = 50
+spirit = 50
+strength = 50
+vitality = 50
+willpower = 50
+HP = 300
+HPmax = 300
+MP = 300
+MPmax = 300
+SP = 300
+SPmax = 300
+EquipHandL = []
+EquipHandR = []
+EquipHead = []
+EquipBody = []
+EquipLegs = []
+EquipAccessory1 = []
+EquipAccessory2 = []
+Personality = ""
+Gender = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

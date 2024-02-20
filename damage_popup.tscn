@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfuoho6l80a8x"]
+
+[ext_resource type="Script" path="res://damage_popup.gd" id="1_sa5py"]
+[ext_resource type="Theme" uid="uid://c0l5ug7556gea" path="res://damage_popup_theme.tres" id="2_awa1j"]
+
+[node name="DamagePopup" type="Node2D"]
+script = ExtResource("1_sa5py")
+
+[node name="DamageText" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_awa1j")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 1
+bbcode_enabled = true
+text = "[center]9999[/center]"
+scroll_active = false
+
+[node name="LifetimeTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="BounceTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="timeout" from="LifetimeTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="BounceTimer" to="." method="_on_bounce_timer_timeout"]

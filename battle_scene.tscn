@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://bph7onh2042l1"]
+
+[ext_resource type="Texture2D" uid="uid://cbcjwrwncfw0t" path="res://battleback1.png" id="1_48j53"]
+[ext_resource type="Script" path="res://battle_scene.gd" id="1_f0whn"]
+[ext_resource type="PackedScene" uid="uid://cx7nk2s07d5ya" path="res://attack_helper.tscn" id="2_40dvn"]
+[ext_resource type="PackedScene" uid="uid://di3ojyjkq0ig1" path="res://initiative_box.tscn" id="8_7j0cr"]
+
+[node name="BattleScene" type="Node"]
+script = ExtResource("1_f0whn")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_48j53")
+expand_mode = 5
+
+[node name="InitiativeBox" parent="." instance=ExtResource("8_7j0cr")]
+
+[node name="Combatants" type="Node" parent="."]
+
+[node name="AttackHelper" parent="." instance=ExtResource("2_40dvn")]

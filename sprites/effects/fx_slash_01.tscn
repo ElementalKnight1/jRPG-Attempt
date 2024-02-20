@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://dusopkln023xe"]
+
+[ext_resource type="Texture2D" uid="uid://hodhjpeujp42" path="res://sprites/effects/weapon_effects/sword & shield effect sprites.png" id="1_b8pl2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fw0p1"]
+atlas = ExtResource("1_b8pl2")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4rw86"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fw0p1")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="fx_slash_01" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_4rw86")
+autoplay = "default"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
