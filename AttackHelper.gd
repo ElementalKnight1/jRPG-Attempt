@@ -197,7 +197,7 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 						await tempFX.animation_finished
 						tempFX.queue_free()
 				else:
-					tempFX.animation_finished.connect(queue_free)
+					tempFX.animation_finished.connect(tempFX.queue_free)
 				
 				
 				
