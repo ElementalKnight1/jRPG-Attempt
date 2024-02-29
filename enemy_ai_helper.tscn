@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://caw86tgyk7jyx"]
+
+[ext_resource type="Script" path="res://EnemyAIHelper.gd" id="1_een6r"]
+
+[node name="EnemyAIHelper" type="Node"]
+script = ExtResource("1_een6r")

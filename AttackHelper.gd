@@ -146,7 +146,9 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 		elif target == "all combatants":
 			target = SignalBus.combatants_dict["hero"]
 			target.append_array(SignalBus.combatants_dict["enemy"])
-	else:
+	elif typeof(target) != TYPE_ARRAY: 
+		#It wasn't a string, and it wasn't a predetermined array, 
+		#so it's probably just one character.
 		target = [target]
 	
 	var i = 0
@@ -162,10 +164,13 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 				
 				#where's it going?
 				var tempFXposition = Vector2.ZERO
+				var tempFXside = null
 				if entry["position"] == "target":
 					tempFXposition = individual_target.get_Area2D().get_global_transform_with_canvas()[2]
+					tempFXside = individual_target.get_stat("character_type")
 				elif entry["position"] == "user":
 					tempFXposition = user.get_Area2D().get_global_transform_with_canvas()[2]
+					tempFXside = user.get_stat("character_type")
 				
 				#Okay, NOW start playing it.
 				var tempFX = load_scene("res://sprites/effects/"+entry["path"]+".tscn",self)
@@ -175,13 +180,10 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 				
 				
 				#Do we need to flip it?
-				#TEST. There's probably smarter ways to decide this -
-				#...maybe a variable on the FX sprite itself?
-				#Because some things need to be flipped when going 'the other way', or whatever.
-				#But for the moment this'll be a step in the right direction.
-				if "flip" in entry:
-					if entry["flip"] == true:
-						tempFX.flip_h = true
+				if "flip" in entry: #If it's in there at all.
+					if entry["flip"]: #If it's not null.
+						if (entry["flip"] == true and tempFXside == "enemy") or (entry["flip"] == false and tempFXside == "hero"):
+							tempFX.flip_h = true
 				
 				#wait for the FX to finish - will want to make this an option
 				#Right now we only care about it if it's the last one in the group
@@ -232,11 +234,11 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 				#await get_tree().create_timer(0.1).timeout
 				if is_last_combatant_in_loop:
 					
-					print("Waiting on the last guy's damage...")
+					#print("Waiting on the last guy's damage...")
 					#print(individual_target)
 					#print_tree_pretty()
 					await get_tree().create_timer(1.0).timeout
-					print("---Done waiting on the last guy's damage...")
+					#print("---Done waiting on the last guy's damage...")
 				
 			if entry["type"] == "animation":
 				
@@ -265,8 +267,8 @@ func do_attack_from_instruction_list(user,target,instruction_list = []):
 							await temp_animated.animation_finished
 			i += 1
 	#We finished the attack, so the turn is done (this can probably be done better)
-	print("Finished the attack.")
-	print_tree_pretty()
+	#print("Finished the attack.")
+	#print_tree_pretty()
 	SignalBus.emit_signal("end_of_turn")
 	
 func load_scene(path, parent : Node) -> Node:

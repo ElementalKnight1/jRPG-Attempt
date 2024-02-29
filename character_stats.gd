@@ -75,6 +75,10 @@ extends Resource
 @export var StyleBody = []
 
 @export var ElementalAttributes = []
+@export var SkillDictionary = {}
+
+@export var BattleAI = [] #A generic holder for a list of instructions, for an enemy to follow in a fight.
+@export var BattleAIMemory = {} #A generic holder for information, so an enemy can 'remember' things in a fight.
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

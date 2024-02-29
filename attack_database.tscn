@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmiw8g7n5odnk"]
+
+[ext_resource type="Script" path="res://AttackDatabase.gd" id="1_djeti"]
+
+[node name="AttackDatabase" type="Node"]
+script = ExtResource("1_djeti")

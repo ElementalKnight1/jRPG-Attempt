@@ -8,7 +8,7 @@ var origin_location = Vector2.ZERO
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	velocity.y = movement_plan[movement_plan_index]
-	print("Damage popup ready!")
+	#print("Damage popup ready!")
 	$BounceTimer.start()
 	pass # Replace with function body.
 

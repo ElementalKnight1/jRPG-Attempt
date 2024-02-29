@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 SignalBus="*res://signal_bus.tscn"
+AttackDatabase="*res://attack_database.tscn"
 
 [display]
 

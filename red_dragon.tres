@@ -34,3 +34,9 @@ StyleHair = []
 StyleSkin = []
 StyleBody = []
 ElementalAttributes = []
+SkillDictionary = {}
+BattleAI = [["Attack", "Fire 1"], ["Target", {
+"one_or_all": "all",
+"side": "hero"
+}]]
+BattleAIMemory = {}

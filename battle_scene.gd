@@ -47,6 +47,7 @@ func add_character(resource_string = ""):
 		tempChar.load_stats(resource_string)
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
 		tempChar.override_sprite()
+		print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
 		
 	#print("Adding: "+tempChar.get_stat("character_name"))
 	$Combatants.add_child(tempChar) #probably wanna organize this a bit more, 
@@ -86,7 +87,17 @@ func start_next_turn(character):
 	#print(character.get_stat("character_type"))
 	if character.get_stat("character_type") == "enemy":
 		#print(character.get_stat("character_name")) #TEST
-		$AttackHelper.spell_fire(character,SignalBus.combatants_dict["hero"][0])
+		pass
+		if character.get_stat("BattleAI") == []: #default for now
+			$AttackHelper.spell_fire(character,SignalBus.combatants_dict["hero"][0])
+		else: #we have an AI script to work with, yay!
+			var enemyTurnOutput = $EnemyAIHelper.evaluate_BattleAI(character)
+			var enemyAttack = AttackDatabase.get_attack(enemyTurnOutput["Attack"])
+			print(enemyTurnOutput)
+			#print(enemyAttack)
+			$AttackHelper.do_attack_from_instruction_list(character,enemyTurnOutput["Target"],enemyAttack)
+			#$AttackHelper.spell_fire(character,SignalBus.combatants_dict["hero"][0])
+		#
 		#do_attack(character,$Character01) #hard-coding the target for the moment.
 	elif character.get_stat("character_type") == "hero":
 		var skillMenu = SkillSelectMenuResource.instantiate()

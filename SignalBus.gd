@@ -6,6 +6,8 @@ signal end_of_turn()
 signal do_attack_from_instruction_list(user,target,instruction_list)
 signal character_died(character)
 
+
+
 @export var combatants_dict = {"hero":[],"enemy":[]}
 
 

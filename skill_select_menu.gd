@@ -33,24 +33,26 @@ func fire_off_skill(user,target,instruction_list):
 
 func _on_button_1_pressed():
 	var testAttackArgs=[]
-	testAttackArgs.append({"type":"definitions","name":"Fire 1","default_target":"enemy","target":"single","description":"A simple fire spell."})
-	testAttackArgs.append({"type":"dialogue","text":"Fire 1","timer":2.0})
-	testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
-	testAttackArgs.append({"type":"FX","position":"target","path":"fx_fire_01","flip":true}) #fx_impact_01
-	testAttackArgs.append({"type":"damage","damage_stat":"knowledge","defense_stat":"spirit",
-							"damage_stat_multiplier":1,"element":"none"})
+	testAttackArgs = AttackDatabase.get_attack("Fire 1")
+	#testAttackArgs.append({"type":"definitions","name":"Fire 1","default_target":"enemy","target":"single","description":"A simple fire spell."})
+	#testAttackArgs.append({"type":"dialogue","text":"Fire 1","timer":2.0})
+	#testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
+	#testAttackArgs.append({"type":"FX","position":"target","path":"fx_fire_01","flip":true}) #fx_impact_01
+	#testAttackArgs.append({"type":"damage","damage_stat":"knowledge","defense_stat":"spirit",
+							#"damage_stat_multiplier":1,"element":"none"})
 	#fire_off_skill(combatants_dict["heroes"][0],combatants_dict["enemies"][0],testAttackArgs)
 	select_target_with_cursor(testAttackArgs[0]["default_target"],$VBoxContainer/Button1,testAttackArgs)
 
 
 func _on_button_2_pressed():
 	var testAttackArgs=[]
-	testAttackArgs.append({"type":"definitions","name":"Ice 2","target":"all enemies","default_target":"enemy","description":"A journeyman ice spell. Hits all foes on the field."})
-	testAttackArgs.append({"type":"dialogue","text":"Ice 2","timer":2.0})
-	testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
-	testAttackArgs.append({"type":"FX","position":"target","path":"fx_ice_02","flip":true}) #fx_impact_01
-	testAttackArgs.append({"type":"damage","damage_stat":"knowledge","defense_stat":"spirit",
-							"damage_stat_multiplier":6,"element":"ice"})
+	testAttackArgs = AttackDatabase.get_attack("Ice 2")
+	#testAttackArgs.append({"type":"definitions","name":"Ice 2","target":"all enemies","default_target":"enemy","description":"A journeyman ice spell. Hits all foes on the field."})
+	#testAttackArgs.append({"type":"dialogue","text":"Ice 2","timer":2.0})
+	#testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
+	#testAttackArgs.append({"type":"FX","position":"target","path":"fx_ice_02","flip":true}) #fx_impact_01
+	#testAttackArgs.append({"type":"damage","damage_stat":"knowledge","defense_stat":"spirit",
+							#"damage_stat_multiplier":6,"element":"ice"})
 	#fire_off_skill(combatants_dict["heroes"][0],combatants_dict["enemies"][0],testAttackArgs)
 	select_target_with_cursor(testAttackArgs[0]["default_target"],$VBoxContainer/Button2,testAttackArgs)
 
@@ -58,12 +60,14 @@ func _on_button_2_pressed():
 func _on_button_3_pressed():
 	
 	var testAttackArgs=[]
-	testAttackArgs.append({"type":"definitions","name":"Mega Impact Hammer","default_target":"enemy","target":"single","description":"A powerful hammer blow."})
-	testAttackArgs.append({"type":"dialogue","text":"Mega Impact Hammer","timer":2.0})
-	testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
-	testAttackArgs.append({"type":"FX","position":"target","path":"fx_impact_01","flip":true}) #fx_impact_01
-	testAttackArgs.append({"type":"damage","damage_stat":"strength","defense_stat":"vitality",
-							"damage_stat_multiplier":3,"element":"none"})
+	testAttackArgs = AttackDatabase.get_attack("Mega Impact Hammer")
+	
+	#testAttackArgs.append({"type":"definitions","name":"Mega Impact Hammer","default_target":"enemy","target":"single","description":"A powerful hammer blow."})
+	#testAttackArgs.append({"type":"dialogue","text":"Mega Impact Hammer","timer":2.0})
+	#testAttackArgs.append({"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4})
+	#testAttackArgs.append({"type":"FX","position":"target","path":"fx_impact_01","flip":true}) #fx_impact_01
+	#testAttackArgs.append({"type":"damage","damage_stat":"strength","defense_stat":"vitality",
+							#"damage_stat_multiplier":3,"element":"none"})
 	#release_focus()
 	
 	#Let's figure out who we should start the targeting on by default.

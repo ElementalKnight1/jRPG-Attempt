@@ -26,7 +26,7 @@ func start_new_round():
 
 func end_of_turn():
 	if not characters_to_remove.is_empty():
-		print("Time to clean the initiative!")
+		#print("Time to clean the initiative!")
 		clean_initiative_array()
 	
 	next_turn()
