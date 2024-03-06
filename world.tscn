@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqcr7ntgfansn"]
+
+[ext_resource type="Script" path="res://World.gd" id="1_2rof4"]
+[ext_resource type="PackedScene" uid="uid://fgy1ukrmkuw6" path="res://tile.tscn" id="2_wopk3"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nevbf"]
+frequency = 0.04
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_2rof4")
+altitude_noise = SubResource("FastNoiseLite_nevbf")
+tile = ExtResource("2_wopk3")
+
+[node name="Camera2D" type="Camera2D" parent="."]
