@@ -3,7 +3,7 @@ extends Node2D
 const TileSize = 16
 const SeaLevel = 0.1
 const ForestLevel = 0.3
-const RENDER_DISTANCE = 48.0 #48 right now for a full screen's map
+const RENDER_DISTANCE = 28.0 #48 right now for a full screen's map
 
 var tileArray = []
 var currTileArrayX = -1
@@ -52,17 +52,24 @@ func generate_terrain_tile(x: int, y: int):
 	add_child(tile)
 	tileArray[currTileArrayY].append(tile)
 	
+	#Link to other tiles
 	if currTileArrayX > 0 and currTileArrayY > 0:
 		tile.tileLinks[0][0] = tileArray[currTileArrayY - 1][currTileArrayX - 1]
 		tileArray[currTileArrayY - 1][currTileArrayX - 1].tileLinks[2][2] = tile
 	if currTileArrayY > 0:
-		tile.tileLinks[0][1] = tileArray[currTileArrayY][currTileArrayX - 1]
-		tileArray[currTileArrayY][currTileArrayX - 1].tileLinks[2][1] = tile
+		tile.tileLinks[0][1] = tileArray[currTileArrayY - 1][currTileArrayX]
+		tileArray[currTileArrayY - 1][currTileArrayX].tileLinks[2][1] = tile
+		if currTileArrayX < (int(RENDER_DISTANCE) - 1):
+			tile.tileLinks[0][2] = tileArray[currTileArrayY - 1][currTileArrayX + 1]
+			tileArray[currTileArrayY - 1][currTileArrayX + 1].tileLinks[2][0] = tile
 	if currTileArrayX > 0:
-		tile.tileLinks[1][0] = tileArray[currTileArrayY - 1][currTileArrayX]
-		tileArray[currTileArrayY - 1][currTileArrayX].tileLinks[1][2] = tile
-	if currTileArrayX > 0:
-		tile.tileLinks[1][0] = tileArray[currTileArrayY - 1][currTileArrayX]
+		tile.tileLinks[1][0] = tileArray[currTileArrayY][currTileArrayX - 1]
+		tileArray[currTileArrayY][currTileArrayX - 1].tileLinks[1][2] = tile
+	
+	
+	
+	#if currTileArrayX > 0:
+		#tile.tileLinks[1][0] = tileArray[currTileArrayY - 1][currTileArrayX]
 
 func altitude_value(x: int, y: int) -> Tile.TileType:
 	var value = altitude_noise.get_noise_2d(x, y)

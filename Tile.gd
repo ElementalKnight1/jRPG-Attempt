@@ -27,10 +27,10 @@ func _ready():
 func set_edges():
 	var edgeString = ""
 	if tile_type == TileType.SEA:
-		for i in 3:
-			for j in 3:
+		for j in 3:
+			for i in 3:
 				if tileLinks[j][i]:
-					if tileLinks[j][i].tile_type == TileType.LAND:
+					if tileLinks[j][i].tile_type != TileType.SEA: #forest, land, anything should work here
 						edgeString += "1"
 					else: edgeString += "0"
 				else: edgeString += "0"
@@ -48,5 +48,9 @@ func set_edges():
 					print("I was told I could use "+edgeString+", but I can't find it!")
 			else:
 				print("Missing: "+edgeString)
+				fullFileName = "res://sprites/world/error.png"
+				sprite.texture = load(fullFileName)
+
+				
 
 	
