@@ -9,9 +9,18 @@ var tileArray = []
 var currTileArrayX = -1
 var currTileArrayY = -1
 
+var currentCharacter
+
+var inputs = {"move_right": Vector2.RIGHT,
+			"move_left": Vector2.LEFT,
+			"move_up": Vector2.UP,
+			"move_down": Vector2.DOWN}
+
+const CharacterResource = preload("res://character.tscn")
 
 @export var altitude_noise: FastNoiseLite
 @export var tile: PackedScene
+#@export var character: PackedScene
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,6 +41,7 @@ func _ready():
 			
 			generate_terrain_tile(x, y)
 		currTileArrayX = -1
+		
 		#await get_tree().create_timer(0.2).timeout #TEST
 	
 	for tileRow in tileArray:
@@ -39,7 +49,32 @@ func _ready():
 			tile.set_edges()
 	#for tile in tileArray.get_items():
 		#tile.set_edges()
+	#print(SignalBus.combatants_dict["hero"][0])
+	
+	#TEMPORARY TEST just getting a character in on the world map
+	var tempChar = CharacterResource.instantiate()
+	tempChar.load_stats("res://test_char_30.tres")
+	$Characters.add_child(tempChar)
+	currentCharacter = tempChar
+	SignalBus.combatants_dict["hero"].append(tempChar)
+	
+	#And trying to place 'em somewhere
+	var tempPosition = position.snapped(Vector2.ONE * TileSize)
+	tempPosition += Vector2.ONE * TileSize/2
+	currentCharacter.position = tempPosition
+	
+func _unhandled_input(event):
+	for dir in inputs.keys():
+		if event.is_action_pressed(dir):
+			move(currentCharacter, dir)
 
+func move(character, dir):
+	var tween = create_tween()
+	tween.tween_property(character, "position",
+		character.position + inputs[dir] * TileSize, 1.0/3).set_trans(Tween.TRANS_SINE)
+	character.isMoving = true
+	await tween.finished
+	character.isMoving = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -49,7 +84,7 @@ func generate_terrain_tile(x: int, y: int):
 	var tile = tile.instantiate()
 	tile.tile_type = altitude_value(x, y)
 	tile.position = Vector2(x, y) * TileSize
-	add_child(tile)
+	$Tiles.add_child(tile)
 	tileArray[currTileArrayY].append(tile)
 	
 	#Link to other tiles

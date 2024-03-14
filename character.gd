@@ -1,6 +1,7 @@
 extends Node2D
 @export var is_active = false
 @export var stats: Resource
+@export var isMoving = false
 
 #var save_path = "res://test_char.tres"
 
@@ -139,3 +140,5 @@ func _on_character_base_sprites_animation_finished():
 	#$CharacterSpritesBase/AnimationPlayer.play("idle_sword_l_1")
 	#$CharacterSpritesBase.set_frame(0)
 	#pass # Replace with function body.
+
+
