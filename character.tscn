@@ -580,14 +580,17 @@ script = ExtResource("1_8252a")
 stats = ExtResource("2_uria3")
 
 [node name="CharacterSpritesBase" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_672jf")
 animation = &"idle_sword_l_1"
 
 [node name="CharacterSpritesHair" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_45ojj")
 animation = &"idle_sword_l_1"
 
 [node name="CharacterSpritesClothes" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_5i5bc")
 animation = &"idle_sword_l_1"
 
@@ -599,11 +602,14 @@ libraries = {
 autoplay = "idle_sword_l"
 
 [node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, -7)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 7)
 shape = SubResource("CapsuleShape2D_egjl1")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, -7)
+collide_with_areas = true
 
 [connection signal="animation_finished" from="CharacterSpritesBase" to="." method="_on_character_base_sprites_animation_finished"]

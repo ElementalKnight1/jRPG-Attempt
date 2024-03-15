@@ -21,8 +21,10 @@ func _ready():
 		sprite.texture = load("res://sprites/world/sea_000000000.png")
 	elif tile_type == TileType.LAND:
 		sprite.texture = load("res://sprites/world/grass_5.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",true)
 	else:
 		sprite.texture = load("res://sprites/world/forest_5.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
 
 func set_edges():
 	var edgeString = ""

@@ -24,9 +24,23 @@ const CharacterResource = preload("res://character.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	generate_map()
+	
+	
+	#TEMPORARY TEST just getting a character in on the world map
+	var tempChar = CharacterResource.instantiate()
+	tempChar.load_stats("res://test_char_30.tres")
+	$Characters.add_child(tempChar)
+	currentCharacter = tempChar
+	SignalBus.combatants_dict["hero"].append(tempChar)
+	
+	#And trying to place 'em somewhere
+	var tempPosition = position.snapped(Vector2.ONE * TileSize)
+	tempPosition += Vector2.ONE * TileSize/2
+	currentCharacter.position = tempPosition
+
+func generate_map():
 	altitude_noise.seed = randi()
-	#self.material.get_shader_param("noiseTexture").seed = randi()
-	pass # Replace with function body.
 	for n in RENDER_DISTANCE:
 		# We divide by two so that half the tiles
 		# generate left/above center and half right/below
@@ -47,34 +61,29 @@ func _ready():
 	for tileRow in tileArray:
 		for tile in tileRow:
 			tile.set_edges()
-	#for tile in tileArray.get_items():
-		#tile.set_edges()
-	#print(SignalBus.combatants_dict["hero"][0])
-	
-	#TEMPORARY TEST just getting a character in on the world map
-	var tempChar = CharacterResource.instantiate()
-	tempChar.load_stats("res://test_char_30.tres")
-	$Characters.add_child(tempChar)
-	currentCharacter = tempChar
-	SignalBus.combatants_dict["hero"].append(tempChar)
-	
-	#And trying to place 'em somewhere
-	var tempPosition = position.snapped(Vector2.ONE * TileSize)
-	tempPosition += Vector2.ONE * TileSize/2
-	currentCharacter.position = tempPosition
-	
+			
 func _unhandled_input(event):
 	for dir in inputs.keys():
 		if event.is_action_pressed(dir):
 			move(currentCharacter, dir)
+	if event.is_action_pressed("debug_refresh"):
+		await generate_map()
 
 func move(character, dir):
-	var tween = create_tween()
-	tween.tween_property(character, "position",
-		character.position + inputs[dir] * TileSize, 1.0/3).set_trans(Tween.TRANS_SINE)
-	character.isMoving = true
-	await tween.finished
-	character.isMoving = false
+	var ray = character.get_node("RayCast2D")
+	#print(ray)
+	ray.target_position = inputs[dir] * TileSize
+	print(ray.target_position)
+	ray.force_raycast_update()
+	if ray.is_colliding():
+		print("Ray collision! No moving for you.")
+	else:
+		var tween = create_tween()
+		tween.tween_property(character, "position",
+			character.position + inputs[dir] * TileSize, 1.0/3).set_trans(Tween.TRANS_SINE)
+		character.isMoving = true
+		await tween.finished
+		character.isMoving = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
