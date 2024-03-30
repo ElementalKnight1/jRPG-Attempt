@@ -37,6 +37,9 @@ func _ready():
 	#And trying to place 'em somewhere
 	var tempPosition = position.snapped(Vector2.ONE * TileSize)
 	tempPosition += Vector2.ONE * TileSize/2
+	if SignalBus.map_starting_location != Vector2.ONE:
+		tempPosition = SignalBus.map_starting_location
+		
 	currentCharacter.position = tempPosition
 
 func generate_map():
@@ -72,7 +75,7 @@ func _unhandled_input(event):
 func move(character, dir):
 	var ray = character.get_node("RayCast2D")
 	#print(ray)
-	ray.target_position = inputs[dir] * TileSize
+	ray.target_position = inputs[dir] * (TileSize)
 	print(ray.target_position)
 	ray.force_raycast_update()
 	if ray.is_colliding():

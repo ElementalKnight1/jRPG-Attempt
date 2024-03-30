@@ -9,6 +9,7 @@ signal character_died(character)
 
 
 @export var combatants_dict = {"hero":[],"enemy":[]}
+@export var map_starting_location = Vector2.ONE
 
 var tileEdgeSubstitutionDictionary = {
 	"000001001":"000001000",

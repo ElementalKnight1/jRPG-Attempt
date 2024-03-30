@@ -28,14 +28,22 @@ func _ready():
 
 func set_edges():
 	var edgeString = ""
-	if tile_type == TileType.SEA:
-		for j in 3:
-			for i in 3:
-				if tileLinks[j][i]:
-					if tileLinks[j][i].tile_type != TileType.SEA: #forest, land, anything should work here
-						edgeString += "1"
-					else: edgeString += "0"
+	
+	for j in 3:
+		for i in 3:
+			if tileLinks[j][i]:
+				if tileLinks[j][i].tile_type != tile_type: #if it's not the same as myself...
+					edgeString += "1"
 				else: edgeString += "0"
+			else: edgeString += "0"
+	
+	if tile_type == TileType.LAND: #TEST temp
+		print("Checking a Land tile...") #TEST
+		if edgeString == "000000000":# and SignalBus.map_starting_location == Vector2.ONE:
+			SignalBus.map_starting_location = self.position
+			print("Found a good starting position!")
+	
+	if tile_type == TileType.SEA:
 		
 		var fullFileName = "res://sprites/world/sea_"+edgeString+".png"
 		if FileAccess.file_exists(fullFileName):
