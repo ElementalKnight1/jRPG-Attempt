@@ -57,6 +57,10 @@ debug_refresh={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_2="Unwalkable Tiles"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

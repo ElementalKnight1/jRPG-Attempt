@@ -79,6 +79,8 @@ func move(character, dir):
 	print(ray.target_position)
 	ray.force_raycast_update()
 	if ray.is_colliding():
+		#print(ray.get_collider().get_parent())
+		#print(ray.get_collider())
 		print("Ray collision! No moving for you.")
 	else:
 		var tween = create_tween()
