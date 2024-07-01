@@ -3,7 +3,9 @@ extends Node2D
 const TileSize = 16
 const SeaLevel = 0.1
 const ForestLevel = 0.3
-const RENDER_DISTANCE = 28.0 #48 right now for a full screen's map
+const RENDER_DISTANCE = 48.0 #48 right now for a full screen's map
+const screen_width = ((TileSize * RENDER_DISTANCE) / 2) - (TileSize / 2)
+const screen_height = ((TileSize * RENDER_DISTANCE) / 2) - (TileSize / 2)
 
 var tileArray = []
 var currTileArrayX = -1
@@ -42,6 +44,15 @@ func _ready():
 		tempPosition = SignalBus.map_starting_location
 		
 	currentCharacter.position = tempPosition
+	
+	#set up camera
+	$Camera2D.make_current()
+	$Camera2D.position = currentCharacter.position
+	$Camera2D.set_limit(SIDE_RIGHT,screen_width)
+	$Camera2D.set_limit(SIDE_LEFT,(-1 * screen_width) - 16)
+	$Camera2D.set_limit(SIDE_BOTTOM,screen_height)
+	$Camera2D.set_limit(SIDE_TOP,(-1 * screen_height) - 16)
+	
 
 func generate_map():
 	altitude_noise.seed = randi()
@@ -81,11 +92,13 @@ func _unhandled_input(event):
 	#for dir in inputs.keys():
 		#if event.is_action_pressed(dir):
 			#move(currentCharacter, dir)
-	#if event.is_action_pressed("debug_refresh"): #F5, of course
-		#await generate_map()
+	if event.is_action_pressed("debug_refresh"): #F5, of course
+		await generate_map()
 
 func move(character, dir):
 	if character.isMoving or dir == Vector2.ZERO:
+		$Camera2D.position = currentCharacter.position
+		print($Camera2D.position) #TEST
 		return #don't need to do anything
 		
 	var ray = character.get_node("RayCast2D")
