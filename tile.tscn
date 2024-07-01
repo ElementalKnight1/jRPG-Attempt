@@ -17,4 +17,5 @@ collision_layer = 2
 input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
 shape = SubResource("RectangleShape2D_puq6l")
