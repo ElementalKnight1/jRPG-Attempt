@@ -105,22 +105,33 @@ func _unhandled_input(event):
 			#move(currentCharacter, dir)
 	if event.is_action_pressed("debug_refresh"): #F5, of course
 		print("Regenerating map...")
+		add_cheat_label("Regenerating Map...")
 		await clear_map()
 		await generate_map()
+		remove_cheat_label("Regenerating Map...")
 	if event.is_action_pressed("cheat_walk_through_walls"):
 		#toggle walk through walls on or off.
 		currentCharacter.cheat_walk_through_walls = not currentCharacter.cheat_walk_through_walls
 		if currentCharacter.cheat_walk_through_walls:
 			#var tempResource = load("res://initiative_list_item.tscn")
-			var tempLabel = load("res://initiative_list_item.tscn").instantiate()
-			tempLabel.set_text("Walk Through Walls")
-			$CanvasLayer/"Cheat Text Overlay Manager".add_child(tempLabel)
+			add_cheat_label("Walk Through Walls")
 		else:
-			for label in $CanvasLayer/"Cheat Text Overlay Manager".get_children():
-				if label.get_text() == "Walk Through Walls":
-					label.queue_free()
+			remove_cheat_label("Walk Through Walls")
 			
 			
+func add_cheat_label(text):
+	print("Adding cheat label: " + text)
+	var tempLabel = load("res://initiative_list_item.tscn").instantiate()
+	tempLabel.set_text(text)
+	$CanvasLayer/"Cheat Text Overlay Manager".add_child(tempLabel)
+	$CanvasLayer/"Cheat Text Overlay Manager".queue_redraw()
+
+func remove_cheat_label(text):
+	print("Removing cheat label: " + text)
+	for label in $CanvasLayer/"Cheat Text Overlay Manager".get_children():
+		if label.get_text() == text:
+			label.queue_free()
+
 
 func move(character, dir):
 	#if (not character.isMoving) and dir != Vector2.ZERO:
