@@ -4,6 +4,7 @@ extends Node2D
 @export var isMoving = false
 @export var facing = "d"
 @export var is_protagonist = false
+@export var cheat_walk_through_walls = false
 
 #var save_path = "res://test_char.tres"
 
@@ -46,7 +47,7 @@ func move(dir):
 	
 	#if we're not going to walk into something,
 	#then start moving that way
-	if not $RayCast2D.is_colliding():
+	if (not $RayCast2D.is_colliding()) or cheat_walk_through_walls:
 		var tween = create_tween()
 		tween.tween_property(self, "position",
 			position + dir * 16, 1.0/4).set_trans(Tween.TRANS_LINEAR)

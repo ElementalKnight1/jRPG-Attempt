@@ -16,3 +16,15 @@ tile = ExtResource("2_wopk3")
 [node name="Characters" type="Node" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Cheat Text Overlay Manager" type="VBoxContainer" parent="CanvasLayer"]
+visibility_layer = 513
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -480.0
+offset_right = 360.0
+grow_vertical = 0
+alignment = 2

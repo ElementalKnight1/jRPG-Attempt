@@ -54,6 +54,15 @@ func _ready():
 	$Camera2D.set_limit(SIDE_BOTTOM,screen_height)
 	$Camera2D.set_limit(SIDE_TOP,(-1 * screen_height) - 16)
 	
+func clear_map():
+	for line in tileArray:
+		for tile in line:
+			if is_instance_valid(tile):
+				tile.queue_free()
+	
+	tileArray.clear()
+	currTileArrayX = -1
+	currTileArrayY = -1
 
 func generate_map():
 	altitude_noise.seed = randi()
@@ -95,7 +104,23 @@ func _unhandled_input(event):
 		#if event.is_action_pressed(dir):
 			#move(currentCharacter, dir)
 	if event.is_action_pressed("debug_refresh"): #F5, of course
+		print("Regenerating map...")
+		await clear_map()
 		await generate_map()
+	if event.is_action_pressed("cheat_walk_through_walls"):
+		#toggle walk through walls on or off.
+		currentCharacter.cheat_walk_through_walls = not currentCharacter.cheat_walk_through_walls
+		if currentCharacter.cheat_walk_through_walls:
+			#var tempResource = load("res://initiative_list_item.tscn")
+			var tempLabel = load("res://initiative_list_item.tscn").instantiate()
+			tempLabel.set_text("Walk Through Walls")
+			$CanvasLayer/"Cheat Text Overlay Manager".add_child(tempLabel)
+		else:
+			for label in $CanvasLayer/"Cheat Text Overlay Manager".get_children():
+				if label.get_text() == "Walk Through Walls":
+					label.queue_free()
+			
+			
 
 func move(character, dir):
 	#if (not character.isMoving) and dir != Vector2.ZERO:

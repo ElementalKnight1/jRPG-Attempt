@@ -14,6 +14,9 @@ func _process(delta):
 func set_text(new_text):
 	$Label.text = new_text
 
+func get_text():
+	return $Label.text
+
 ##Highlights a row (mostly to make it obvious whose turn it is now)
 func highlight():
 	$Label.set("theme_override_font_sizes/font_size",24)
