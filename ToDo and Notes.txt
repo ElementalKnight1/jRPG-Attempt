@@ -1,0 +1,6 @@
+TODO
+* Change how tiles are made, so I don't have to make umpteen bazillion variations for each possible combination of edges.
+* Introduce walking sprites.
+* Maybe change how I'm doing sprites? 
+...I'm way less worried about breathing sprites and more about getting variations and mix-n-match-ing in.
+...also I really prefer the FF VI style to this Mana style I think. But, I have the license for these.

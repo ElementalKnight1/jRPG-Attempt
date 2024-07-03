@@ -44,6 +44,7 @@ func _ready():
 		tempPosition = SignalBus.map_starting_location
 		
 	currentCharacter.position = tempPosition
+	currentCharacter.play_anim("idle_sword_l") #for starting
 	
 	#set up camera
 	$Camera2D.make_current()
@@ -78,13 +79,14 @@ func generate_map():
 			tile.set_edges()
 			
 func _unhandled_input(event):
+	pressed_direction = Vector2.ZERO
 	if event.is_action("move_up") or event.is_action("move_down"):
-		pressed_direction = Vector2.ZERO
+		#pressed_direction = Vector2.ZERO
 		pressed_direction.y = Input.get_axis("move_up","move_down")
 		if pressed_direction.y == 0.0:
 			pressed_direction.x = Input.get_axis("move_left","move_right")
 	elif event.is_action("move_left") or event.is_action("move_right"):
-		pressed_direction = Vector2.ZERO
+		#pressed_direction = Vector2.ZERO
 		pressed_direction.x = Input.get_axis("move_left","move_right")
 		if pressed_direction.x == 0.0:
 			pressed_direction.y = Input.get_axis("move_down","move_up")
@@ -96,22 +98,57 @@ func _unhandled_input(event):
 		await generate_map()
 
 func move(character, dir):
+	#if (not character.isMoving) and dir != Vector2.ZERO:
+		##we aren't moving but we're about to start moving.
+		#character.play_anim("walk_d")
+		#
+	#elif character.isMoving:
+		#$Camera2D.position = currentCharacter.position
+		#return
 	if character.isMoving or dir == Vector2.ZERO:
 		$Camera2D.position = currentCharacter.position
-		print($Camera2D.position) #TEST
+		##print($Camera2D.position) #TEST
 		return #don't need to do anything
-		
-	var ray = character.get_node("RayCast2D")
-	ray.target_position = dir * (TileSize)
-	ray.force_raycast_update()
 	
-	if not ray.is_colliding():
-		var tween = create_tween()
-		tween.tween_property(character, "position",
-			character.position + dir * TileSize, 1.0/4).set_trans(Tween.TRANS_LINEAR)
-		character.isMoving = true
-		await tween.finished
-		character.isMoving = false
+	character.move(dir)
+	
+	
+	
+	
+	
+	#var ray = character.get_node("RayCast2D")
+	#ray.target_position = dir * (TileSize)
+	#ray.force_raycast_update()
+	#
+	#if not ray.is_colliding():
+		#
+		#var anim_to_play = ""
+		#
+		#if dir.x != 0 or dir.y != 0:
+			#anim_to_play = "walk"
+		#else:
+			#anim_to_play = "idle"
+		#if dir.x < 0:
+			#character.facing = "l"
+		#elif dir.x > 0:
+			#character.facing = "r"
+		#elif dir.y < 0:
+			#character.facing = "u"
+		#else:
+			#character.facing = "d"
+		#
+		#anim_to_play += "_" + character.facing
+		#character.play_anim(anim_to_play)
+		#
+		#var tween = create_tween()
+		#tween.tween_property(character, "position",
+			#character.position + dir * TileSize, 1.0/4).set_trans(Tween.TRANS_LINEAR)
+		#character.isMoving = true
+		#await tween.finished
+		#character.isMoving = false
+		
+		
+		
 	#OLD INPUT
 	#var ray = character.get_node("RayCast2D")
 	##print(ray)

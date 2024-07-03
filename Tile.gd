@@ -38,10 +38,10 @@ func set_edges():
 			else: edgeString += "0"
 	
 	if tile_type == TileType.LAND: #TEST temp
-		print("Checking a Land tile...") #TEST
+		#print("Checking a Land tile...") #TEST
 		if edgeString == "000000000":# and SignalBus.map_starting_location == Vector2.ONE:
 			SignalBus.map_starting_location = self.position
-			print("Found a good starting position!")
+			#print("Found a good starting position!")
 	
 	if tile_type == TileType.SEA:
 		

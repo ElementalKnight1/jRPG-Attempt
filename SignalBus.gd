@@ -13,6 +13,7 @@ signal character_died(character)
 
 var tileEdgeSubstitutionDictionary = {
 	"000001001":"000001000",
+	"011101111":"111101111",
 	"001001001":"000001000",
 	"000000011":"000000010",
 	"000000111":"000000010",

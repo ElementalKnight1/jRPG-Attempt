@@ -2,6 +2,8 @@ extends Node2D
 @export var is_active = false
 @export var stats: Resource
 @export var isMoving = false
+@export var facing = "d"
+@export var is_protagonist = false
 
 #var save_path = "res://test_char.tres"
 
@@ -19,11 +21,45 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	#If we were walking, but now we've stopped, let's look like we've stopped.
+	if self.isMoving == false and $CharacterSpritesBase.get_animation().begins_with("walk_"):
+		play_anim("idle_"+facing,false)
 
 func set_up_character():
 	pass
 	#CharacterStats = load_character_data()
+
+func move(dir):
+	#change direction (internally)
+	if dir.x < 0:
+		facing = "l"
+	elif dir.x > 0:
+		facing = "r"
+	elif dir.y < 0:
+		facing = "u"
+	else:
+		facing = "d"
+	
+	#check if we're going to walk into something
+	$RayCast2D.target_position = dir * (16)
+	$RayCast2D.force_raycast_update()
+	
+	#if we're not going to walk into something,
+	#then start moving that way
+	if not $RayCast2D.is_colliding():
+		var tween = create_tween()
+		tween.tween_property(self, "position",
+			position + dir * 16, 1.0/4).set_trans(Tween.TRANS_LINEAR)
+		self.isMoving = true
+		#if we aren't playing the animation already, start it.
+		if $CharacterSpritesBase.get_animation() != "walk_"+facing:
+			play_anim("walk_"+facing,false)
+		await tween.finished
+		self.isMoving = false
+	else:
+		play_anim("idle_"+facing) #change facing
+		
+
 
 func get_character_size():
 	pass
