@@ -12,6 +12,7 @@ enum TileType {
 }
 
 @export var tile_type: TileType
+@export var group: int
 
 @onready var sprite := $Sprite2D
 
@@ -25,6 +26,22 @@ func _ready():
 	else:
 		sprite.texture = load("res://sprites/world/forest_5.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+
+func set_tile_type(newTileType:int):
+	self.tile_type = newTileType
+	if tile_type == TileType.SEA:
+		sprite.texture = load("res://sprites/world/sea_000000000.png")
+	elif tile_type == TileType.LAND:
+		sprite.texture = load("res://sprites/world/grass_5.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",true)
+	else:
+		sprite.texture = load("res://sprites/world/forest_5.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+
+func set_group(newGroup:int):
+	self.group = newGroup
+	$Label.text = str(self.group)
+	$Label.visible = true
 
 func set_edges():
 	var edgeString = ""

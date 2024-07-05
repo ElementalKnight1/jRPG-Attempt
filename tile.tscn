@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://fgy1ukrmkuw6"]
+[gd_scene load_steps=5 format=3 uid="uid://fgy1ukrmkuw6"]
 
 [ext_resource type="Script" path="res://Tile.gd" id="1_y48d8"]
 [ext_resource type="Texture2D" uid="uid://bvdb20auf4ptg" path="res://sprites/world/sea_111101111.png" id="2_tavnj"]
+[ext_resource type="FontFile" uid="uid://c8wi6x2pg6imm" path="res://fonts/ManaSeedBody.ttf" id="3_mgj2w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_puq6l"]
 size = Vector2(16, 16)
@@ -19,3 +20,26 @@ input_pickable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 visible = false
 shape = SubResource("RectangleShape2D_puq6l")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("3_mgj2w")
+theme_override_font_sizes/font_size = 8
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true

@@ -11,6 +11,8 @@ var tileArray = []
 var currTileArrayX = -1
 var currTileArrayY = -1
 
+var tileGroups = {}
+
 var currentCharacter
 
 var inputs = {"move_right": Vector2.RIGHT,
@@ -27,7 +29,7 @@ const CharacterResource = preload("res://character.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	generate_map()
+	await generate_map()
 	
 	
 	#TEMPORARY TEST just getting a character in on the world map
@@ -38,13 +40,7 @@ func _ready():
 	SignalBus.combatants_dict["hero"].append(tempChar)
 	
 	#And trying to place 'em somewhere
-	var tempPosition = position.snapped(Vector2.ONE * TileSize)
-	tempPosition += Vector2.ONE * TileSize/2
-	if SignalBus.map_starting_location != Vector2.ONE:
-		tempPosition = SignalBus.map_starting_location
-		
-	currentCharacter.position = tempPosition
-	currentCharacter.play_anim("idle_sword_l") #for starting
+	place_character()
 	
 	#set up camera
 	$Camera2D.make_current()
@@ -53,18 +49,32 @@ func _ready():
 	$Camera2D.set_limit(SIDE_LEFT,(-1 * screen_width) - 16)
 	$Camera2D.set_limit(SIDE_BOTTOM,screen_height)
 	$Camera2D.set_limit(SIDE_TOP,(-1 * screen_height) - 16)
-	
+
+func place_character():
+	var randomTile = tileGroups.keys().pick_random()
+	randomTile = tileGroups[randomTile]["list"].pick_random()
+	var tempPosition = randomTile.position
+	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
+	tempPosition += Vector2.ONE * TileSize/2
+	if SignalBus.map_starting_location != Vector2.ONE:
+		tempPosition = SignalBus.map_starting_location
+		
+	currentCharacter.position = tempPosition
+	currentCharacter.play_anim("idle_sword_l") #for starting
+
 func clear_map():
 	for line in tileArray:
 		for tile in line:
 			if is_instance_valid(tile):
 				tile.queue_free()
 	
+	tileGroups.clear()
 	tileArray.clear()
 	currTileArrayX = -1
 	currTileArrayY = -1
 
 func generate_map():
+	#Make map
 	altitude_noise.seed = randi()
 	for n in RENDER_DISTANCE:
 		# We divide by two so that half the tiles
@@ -82,6 +92,10 @@ func generate_map():
 		currTileArrayX = -1
 		
 		#await get_tree().create_timer(0.2).timeout #TEST
+	
+	map_smoother()
+	
+	determine_tile_groups()
 	
 	for tileRow in tileArray:
 		for tile in tileRow:
@@ -134,13 +148,7 @@ func remove_cheat_label(text):
 
 
 func move(character, dir):
-	#if (not character.isMoving) and dir != Vector2.ZERO:
-		##we aren't moving but we're about to start moving.
-		#character.play_anim("walk_d")
-		#
-	#elif character.isMoving:
-		#$Camera2D.position = currentCharacter.position
-		#return
+
 	if character.isMoving or dir == Vector2.ZERO:
 		$Camera2D.position = currentCharacter.position
 		##print($Camera2D.position) #TEST
@@ -148,60 +156,6 @@ func move(character, dir):
 	
 	character.move(dir)
 	
-	
-	
-	
-	
-	#var ray = character.get_node("RayCast2D")
-	#ray.target_position = dir * (TileSize)
-	#ray.force_raycast_update()
-	#
-	#if not ray.is_colliding():
-		#
-		#var anim_to_play = ""
-		#
-		#if dir.x != 0 or dir.y != 0:
-			#anim_to_play = "walk"
-		#else:
-			#anim_to_play = "idle"
-		#if dir.x < 0:
-			#character.facing = "l"
-		#elif dir.x > 0:
-			#character.facing = "r"
-		#elif dir.y < 0:
-			#character.facing = "u"
-		#else:
-			#character.facing = "d"
-		#
-		#anim_to_play += "_" + character.facing
-		#character.play_anim(anim_to_play)
-		#
-		#var tween = create_tween()
-		#tween.tween_property(character, "position",
-			#character.position + dir * TileSize, 1.0/4).set_trans(Tween.TRANS_LINEAR)
-		#character.isMoving = true
-		#await tween.finished
-		#character.isMoving = false
-		
-		
-		
-	#OLD INPUT
-	#var ray = character.get_node("RayCast2D")
-	##print(ray)
-	#ray.target_position = inputs[dir] * (TileSize)
-	#print(ray.target_position)
-	#ray.force_raycast_update()
-	#if ray.is_colliding():
-		##print(ray.get_collider().get_parent())
-		##print(ray.get_collider())
-		#print("Ray collision! No moving for you.")
-	#else:
-		#var tween = create_tween()
-		#tween.tween_property(character, "position",
-			#character.position + inputs[dir] * TileSize, 1.0/3).set_trans(Tween.TRANS_SINE)
-		#character.isMoving = true
-		#await tween.finished
-		#character.isMoving = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -215,25 +169,115 @@ func generate_terrain_tile(x: int, y: int):
 	tile.position = Vector2(x, y) * TileSize
 	$Tiles.add_child(tile)
 	tileArray[currTileArrayY].append(tile)
+	link_tile_to_neighbors(currTileArrayX,currTileArrayY)
+#
 	
-	#Link to other tiles
-	if currTileArrayX > 0 and currTileArrayY > 0:
-		tile.tileLinks[0][0] = tileArray[currTileArrayY - 1][currTileArrayX - 1]
-		tileArray[currTileArrayY - 1][currTileArrayX - 1].tileLinks[2][2] = tile
-	if currTileArrayY > 0:
-		tile.tileLinks[0][1] = tileArray[currTileArrayY - 1][currTileArrayX]
-		tileArray[currTileArrayY - 1][currTileArrayX].tileLinks[2][1] = tile
-		if currTileArrayX < (int(RENDER_DISTANCE) - 1):
-			tile.tileLinks[0][2] = tileArray[currTileArrayY - 1][currTileArrayX + 1]
-			tileArray[currTileArrayY - 1][currTileArrayX + 1].tileLinks[2][0] = tile
-	if currTileArrayX > 0:
-		tile.tileLinks[1][0] = tileArray[currTileArrayY][currTileArrayX - 1]
-		tileArray[currTileArrayY][currTileArrayX - 1].tileLinks[1][2] = tile
+func link_tile_to_neighbors(tileArrayX,tileArrayY):
+	var tile = tileArray[tileArrayY][tileArrayX]
+	if tileArrayX > 0 and tileArrayY > 0: #if it's not in the top row nor left column, link to what's up and left of it.
+		tile.tileLinks[0][0] = tileArray[tileArrayY - 1][tileArrayX - 1]
+		tileArray[tileArrayY - 1][tileArrayX - 1].tileLinks[2][2] = tile
+	if tileArrayY > 0:
+		tile.tileLinks[0][1] = tileArray[tileArrayY - 1][tileArrayX]
+		tileArray[tileArrayY - 1][tileArrayX].tileLinks[2][1] = tile
+		if tileArrayX < (int(RENDER_DISTANCE) - 1):
+			tile.tileLinks[0][2] = tileArray[tileArrayY - 1][tileArrayX + 1]
+			tileArray[tileArrayY - 1][tileArrayX + 1].tileLinks[2][0] = tile
+	if tileArrayX > 0:
+		tile.tileLinks[1][0] = tileArray[tileArrayY][tileArrayX - 1]
+		tileArray[tileArrayY][tileArrayX - 1].tileLinks[1][2] = tile
+
+func determine_tile_groups():
+	#basically determines what island a given tile belongs to.
+	#also gathers data in the tileGroups dictionary that will prove useful later.
+	var tileGrouperY = -1
+	var tileGrouperX = -1
+	var tempTileGroup = 999999
+	for row in tileArray:
+		tileGrouperY += 1
+		for tile in row:
+			tempTileGroup = 999999
+			tileGrouperX += 1
+			if tile.tile_type != tile.TileType.SEA:
+				#check if any of the previous tiles it's connected to are part of a group. If they are, this one is too.
+				if tile.tileLinks[0][0].group > 0:
+					tempTileGroup = tile.tileLinks[0][0].group
+				if tile.tileLinks[0][1].group > 0 and tile.tileLinks[0][1].group != tempTileGroup:
+					if tile.tileLinks[0][1].group > tempTileGroup:
+						await combine_tilegroups(tempTileGroup,tile.tileLinks[0][1].group)
+					tempTileGroup = tile.tileLinks[0][1].group
+				if tile.tileLinks[0][2].group > 0 and tile.tileLinks[0][2].group != tempTileGroup:
+					if tile.tileLinks[0][2].group > tempTileGroup:
+						await combine_tilegroups(tempTileGroup,tile.tileLinks[0][2].group)
+					tempTileGroup = tile.tileLinks[0][2].group
+				if tile.tileLinks[1][0].group > 0 and tile.tileLinks[1][0].group != tempTileGroup:
+					if tile.tileLinks[1][0].group > tempTileGroup:
+						await combine_tilegroups(tempTileGroup,tile.tileLinks[1][0].group)
+					elif tempTileGroup != 999999:
+						await combine_tilegroups(tile.tileLinks[1][0].group, tempTileGroup)
+						#This is dumb, but it seems to work, so... good enough for me.
+					tempTileGroup = tile.tileLinks[1][0].group
+				
+				if tempTileGroup == 999999: #we didn't find an existing group so let's make a new one
+					tempTileGroup = add_new_tilegroup()
+				
+				tile.set_group(tempTileGroup)
+				add_tile_to_tilegroups(tile,tile.group)
+		tileGrouperX = -1
+	#a little cleanup afterwards
+	for entry in tileGroups.keys():
+		if tileGroups[entry].is_empty():
+			tileGroups.erase(entry)
+
+func add_tile_to_tilegroups(tile,tileGroup:int):
+	tileGroups[tileGroup]["count"] += 1
+	tileGroups[tileGroup]["list"].append(tile)
+
+func combine_tilegroups(oldTileGroupToKeep:int,oldTileGroupToRemove:int):
+	#for key in tileGroups[oldTileGroupToRemove]:
+	tileGroups[oldTileGroupToKeep]["count"] += tileGroups[oldTileGroupToRemove]["count"]
+	tileGroups[oldTileGroupToKeep]["list"].append_array(tileGroups[oldTileGroupToRemove]["list"])
+	for tile in tileGroups[oldTileGroupToRemove]["list"]: #make sure those tiles get the message!
+		tile.set_group(oldTileGroupToKeep)
+	tileGroups[oldTileGroupToRemove].clear()
+		
+
+func add_new_tilegroup():
+	#make a blank tileGroup!
+	var newTileGroup = tileGroups.size() + 1
+	tileGroups[newTileGroup] = {}
+	tileGroups[newTileGroup]["count"] = 0
+	tileGroups[newTileGroup]["list"] = []
+	return newTileGroup
 	
-	
-	
-	#if currTileArrayX > 0:
-		#tile.tileLinks[1][0] = tileArray[currTileArrayY - 1][currTileArrayX]
+
+func map_smoother():
+	#if two tiles of the same type are bookending something that isn't of that type,
+	#smooth that out.
+	var smoothingY = -1
+	var smoothingX = -1
+	for row in tileArray:
+		smoothingY += 1
+		for tile in row:
+			smoothingX += 1
+			if smoothingY == 0 or smoothingY == len(tileArray) - 1: #if it's the top or bottom row,
+				tile.set_tile_type(tile.TileType.SEA) #make it water.
+				#print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": forcing water.")
+			elif smoothingX > 0 and smoothingX < len(row) - 1: #if it's in the middle somewhere,
+				if tileArray[smoothingY][smoothingX - 1].tile_type == tileArray[smoothingY][smoothingX + 1].tile_type and tileArray[smoothingY][smoothingX - 1].tile_type != tileArray[smoothingY][smoothingX].tile_type: 
+					#and the tiles to the left and right are the same,
+					print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY][smoothingX - 1].tile_type) + ".")
+					tile.set_tile_type(tileArray[smoothingY][smoothingX - 1].tile_type) #smooth it out and make this tile those tile-types too
+				elif tileArray[smoothingY - 1][smoothingX].tile_type == tileArray[smoothingY + 1][smoothingX].tile_type and tileArray[smoothingY - 1][smoothingX].tile_type != tileArray[smoothingY][smoothingX].tile_type: 
+					#and the tiles above and below are the same,
+					print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY - 1][smoothingX].tile_type) + ".")
+					tile.set_tile_type(tileArray[smoothingY - 1][smoothingX].tile_type) #smooth it out and make this tile those tile-types too
+					
+			else: #it's on the left or right edge, let's make it just water.
+				tile.set_tile_type(tile.TileType.SEA)
+				#print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": forcing water.")
+		smoothingX = -1
+		
 
 func altitude_value(x: int, y: int) -> Tile.TileType:
 	var value = altitude_noise.get_noise_2d(x, y)
@@ -245,3 +289,5 @@ func altitude_value(x: int, y: int) -> Tile.TileType:
 		return Tile.TileType.LAND
 		
 	return Tile.TileType.SEA
+
+
