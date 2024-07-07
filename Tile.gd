@@ -31,6 +31,7 @@ func set_tile_type(newTileType:int):
 	self.tile_type = newTileType
 	if tile_type == TileType.SEA:
 		sprite.texture = load("res://sprites/world/sea_000000000.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",false)
 	elif tile_type == TileType.LAND:
 		sprite.texture = load("res://sprites/world/grass_5.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",true)
@@ -41,7 +42,10 @@ func set_tile_type(newTileType:int):
 func set_group(newGroup:int):
 	self.group = newGroup
 	$Label.text = str(self.group)
-	$Label.visible = true
+	if newGroup != 0:
+		$Label.visible = true
+	else:
+		$Label.visible = false
 
 func set_edges():
 	var edgeString = ""

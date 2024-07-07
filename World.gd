@@ -1,7 +1,7 @@
 extends Node2D
 
 const TileSize = 16
-const SeaLevel = 0.1
+const SeaLevel = 0.001 #0.1 for a few more islands; 0.01 for 2 continents; 0.001 for a big single continent
 const ForestLevel = 0.3
 const MountainLevel = 0.7
 
@@ -55,6 +55,7 @@ func _ready():
 
 func place_character():
 	var randomTile = tileGroups.keys().pick_random()
+	#print("Placing character in TileGroup "+str(randomTile))
 	randomTile = tileGroups[randomTile]["list"].pick_random()
 	var tempPosition = randomTile.position
 	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
@@ -63,7 +64,8 @@ func place_character():
 		tempPosition = SignalBus.map_starting_location
 		
 	currentCharacter.position = tempPosition
-	currentCharacter.play_anim("idle_sword_l") #for starting
+	#print(currentCharacter.position) #TEST
+	#currentCharacter.play_anim("idle_sword_l") #for starting
 
 func clear_map():
 	for line in tileArray:
@@ -238,8 +240,20 @@ func determine_tile_groups():
 	for entry in tileGroups.keys():
 		if tileGroups[entry].is_empty():
 			tileGroups.erase(entry)
+		elif tileGroups[entry].count <= 6: #it only has 6 or fewer tiles? Too small, let's remove it.
+			for tile in tileGroups[entry]["list"]:
+				tile.set_tile_type(0)
+				#tile.$Label.visible = false
+				tile.set_group(0)
 		else:
 			tileGroups[entry]["centerpoint"] /= tileGroups[entry]["count"]
+
+func remove_too_small_tilegroups(numTileLimit:int):
+	for entry in tileGroups.keys():
+		if tileGroups[entry]["count"] <= numTileLimit:
+			for tile in tileGroups[entry]["list"]:
+				tile.set_tile_type(0) #set each tile in the group to water
+			tileGroups.erase(entry) #and remove the tileGroup entirely
 
 func add_tile_to_tilegroups(tile,tileGroup:int):
 	tileGroups[tileGroup]["count"] += 1
