@@ -100,6 +100,8 @@ func generate_map():
 	
 	determine_tile_groups() #determine the continents
 	
+	print_tilegroups()
+	
 	for tileRow in tileArray:
 		for tile in tileRow:
 			tile.set_edges()
@@ -236,15 +238,19 @@ func determine_tile_groups():
 	for entry in tileGroups.keys():
 		if tileGroups[entry].is_empty():
 			tileGroups.erase(entry)
+		else:
+			tileGroups[entry]["centerpoint"] /= tileGroups[entry]["count"]
 
 func add_tile_to_tilegroups(tile,tileGroup:int):
 	tileGroups[tileGroup]["count"] += 1
 	tileGroups[tileGroup]["list"].append(tile)
+	tileGroups[tileGroup]["centerpoint"] += tile.position
 
 func combine_tilegroups(oldTileGroupToKeep:int,oldTileGroupToRemove:int):
 	#for key in tileGroups[oldTileGroupToRemove]:
 	tileGroups[oldTileGroupToKeep]["count"] += tileGroups[oldTileGroupToRemove]["count"]
 	tileGroups[oldTileGroupToKeep]["list"].append_array(tileGroups[oldTileGroupToRemove]["list"])
+	tileGroups[oldTileGroupToKeep]["centerpoint"] += tileGroups[oldTileGroupToRemove]["centerpoint"]
 	for tile in tileGroups[oldTileGroupToRemove]["list"]: #make sure those tiles get the message!
 		tile.set_group(oldTileGroupToKeep)
 	tileGroups[oldTileGroupToRemove].clear()
@@ -256,8 +262,24 @@ func add_new_tilegroup():
 	tileGroups[newTileGroup] = {}
 	tileGroups[newTileGroup]["count"] = 0
 	tileGroups[newTileGroup]["list"] = []
-	return newTileGroup
 	
+	tileGroups[newTileGroup]["centerpoint"] = Vector2.ZERO
+	
+	var randomVector = Vector2.ZERO
+	randomVector.x = randf_range(-1,1)
+	randomVector.y = randf_range(-1,1)
+	tileGroups[newTileGroup]["vector"] = randomVector
+	return newTileGroup
+
+func print_tilegroups():
+	var tempString = ""
+	for group in tileGroups.keys():
+		tempString = ""
+		tempString = "Tile Group "+str(group)+":\n"
+		tempString += "    Count: "+str(tileGroups[group]["count"])+"\n"
+		tempString += "    Vector: "+str(tileGroups[group]["vector"].x)+", "+str(tileGroups[group]["vector"].x)+"\n"
+		tempString += "    Centerpoint: "+str(tileGroups[group]["centerpoint"])
+		print(tempString)
 
 func map_smoother():
 	#if two tiles of the same type are bookending something that isn't of that type,
