@@ -5,6 +5,8 @@ extends Node2D
 @export var facing = "d"
 @export var is_protagonist = false
 @export var cheat_walk_through_walls = false
+@export var cheat_move_faster = false
+@export var movementSpeedFactor = 4.0
 
 #var save_path = "res://test_char.tres"
 
@@ -29,6 +31,12 @@ func _process(delta):
 func set_up_character():
 	pass
 	#CharacterStats = load_character_data()
+func activate_cheat_move_faster(onOrOff:bool):
+	self.cheat_move_faster = onOrOff
+	if onOrOff:
+		self.movementSpeedFactor = 8
+	else:
+		self.movementSpeedFactor = 4
 
 func move(dir):
 	#change direction (internally)
@@ -50,7 +58,7 @@ func move(dir):
 	if (not $RayCast2D.is_colliding()) or cheat_walk_through_walls:
 		var tween = create_tween()
 		tween.tween_property(self, "position",
-			position + dir * 16, 1.0/4).set_trans(Tween.TRANS_LINEAR)
+			position + dir * 16, 1.0/self.movementSpeedFactor).set_trans(Tween.TRANS_LINEAR)
 		self.isMoving = true
 		#if we aren't playing the animation already, start it.
 		if $CharacterSpritesBase.get_animation() != "walk_"+facing:

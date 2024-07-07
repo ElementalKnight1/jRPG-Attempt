@@ -3,9 +3,12 @@ extends Node2D
 const TileSize = 16
 const SeaLevel = 0.1
 const ForestLevel = 0.3
-const RENDER_DISTANCE = 48.0 #48 right now for a full screen's map
-const screen_width = ((TileSize * RENDER_DISTANCE) / 2) - (TileSize / 2)
-const screen_height = ((TileSize * RENDER_DISTANCE) / 2) - (TileSize / 2)
+const MountainLevel = 0.7
+
+const MAP_SIZE_X = 64
+const MAP_SIZE_Y = 48
+const screen_width = ((TileSize * MAP_SIZE_X) / 2) - (TileSize / 2)
+const screen_height = ((TileSize * MAP_SIZE_Y) / 2) - (TileSize / 2)
 
 var tileArray = []
 var currTileArrayX = -1
@@ -76,15 +79,15 @@ func clear_map():
 func generate_map():
 	#Make map
 	altitude_noise.seed = randi()
-	for n in RENDER_DISTANCE:
+	for n in MAP_SIZE_Y:
 		# We divide by two so that half the tiles
 		# generate left/above center and half right/below
-		var y = n - RENDER_DISTANCE / 2.0
+		var y = n - MAP_SIZE_Y / 2.0
 		
 		currTileArrayY += 1
 		tileArray.append([])
-		for m in RENDER_DISTANCE:
-			var x = m - RENDER_DISTANCE / 2.0
+		for m in MAP_SIZE_X:
+			var x = m - MAP_SIZE_X / 2.0
 			
 			currTileArrayX += 1
 			
@@ -93,9 +96,9 @@ func generate_map():
 		
 		#await get_tree().create_timer(0.2).timeout #TEST
 	
-	map_smoother()
+	map_smoother() #smooth out shapes' edges
 	
-	determine_tile_groups()
+	determine_tile_groups() #determine the continents
 	
 	for tileRow in tileArray:
 		for tile in tileRow:
@@ -131,7 +134,13 @@ func _unhandled_input(event):
 			add_cheat_label("Walk Through Walls")
 		else:
 			remove_cheat_label("Walk Through Walls")
-			
+	if event.is_action_pressed("cheat_move_faster"):
+		currentCharacter.activate_cheat_move_faster(!currentCharacter.cheat_move_faster)
+		if currentCharacter.cheat_move_faster:
+			#var tempResource = load("res://initiative_list_item.tscn")
+			add_cheat_label("Move Faster")
+		else:
+			remove_cheat_label("Move Faster")
 			
 func add_cheat_label(text):
 	print("Adding cheat label: " + text)
@@ -148,7 +157,6 @@ func remove_cheat_label(text):
 
 
 func move(character, dir):
-
 	if character.isMoving or dir == Vector2.ZERO:
 		$Camera2D.position = currentCharacter.position
 		##print($Camera2D.position) #TEST
@@ -180,7 +188,7 @@ func link_tile_to_neighbors(tileArrayX,tileArrayY):
 	if tileArrayY > 0:
 		tile.tileLinks[0][1] = tileArray[tileArrayY - 1][tileArrayX]
 		tileArray[tileArrayY - 1][tileArrayX].tileLinks[2][1] = tile
-		if tileArrayX < (int(RENDER_DISTANCE) - 1):
+		if tileArrayX < (int(MAP_SIZE_X) - 1):
 			tile.tileLinks[0][2] = tileArray[tileArrayY - 1][tileArrayX + 1]
 			tileArray[tileArrayY - 1][tileArrayX + 1].tileLinks[2][0] = tile
 	if tileArrayX > 0:
@@ -266,11 +274,11 @@ func map_smoother():
 			elif smoothingX > 0 and smoothingX < len(row) - 1: #if it's in the middle somewhere,
 				if tileArray[smoothingY][smoothingX - 1].tile_type == tileArray[smoothingY][smoothingX + 1].tile_type and tileArray[smoothingY][smoothingX - 1].tile_type != tileArray[smoothingY][smoothingX].tile_type: 
 					#and the tiles to the left and right are the same,
-					print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY][smoothingX - 1].tile_type) + ".")
+					#TEST print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY][smoothingX - 1].tile_type) + ".")
 					tile.set_tile_type(tileArray[smoothingY][smoothingX - 1].tile_type) #smooth it out and make this tile those tile-types too
 				elif tileArray[smoothingY - 1][smoothingX].tile_type == tileArray[smoothingY + 1][smoothingX].tile_type and tileArray[smoothingY - 1][smoothingX].tile_type != tileArray[smoothingY][smoothingX].tile_type: 
 					#and the tiles above and below are the same,
-					print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY - 1][smoothingX].tile_type) + ".")
+					#TEST print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": was "+ str(tile.tile_type) +", forcing " + str(tileArray[smoothingY - 1][smoothingX].tile_type) + ".")
 					tile.set_tile_type(tileArray[smoothingY - 1][smoothingX].tile_type) #smooth it out and make this tile those tile-types too
 					
 			else: #it's on the left or right edge, let's make it just water.
