@@ -14,7 +14,8 @@ var tileArray = []
 var currTileArrayX = -1
 var currTileArrayY = -1
 
-var tileGroups = {}
+var continents = {}
+var regions = {}
 
 var currentCharacter
 
@@ -54,9 +55,9 @@ func _ready():
 	$Camera2D.set_limit(SIDE_TOP,(-1 * screen_height) - 16)
 
 func place_character():
-	var randomTile = tileGroups.keys().pick_random()
+	var randomTile = continents.keys().pick_random()
 	#print("Placing character in TileGroup "+str(randomTile))
-	randomTile = tileGroups[randomTile]["list"].pick_random()
+	randomTile = continents[randomTile]["list"].pick_random()
 	var tempPosition = randomTile.position
 	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
 	tempPosition += Vector2.ONE * TileSize/2
@@ -73,7 +74,7 @@ func clear_map():
 			if is_instance_valid(tile):
 				tile.queue_free()
 	
-	tileGroups.clear()
+	continents.clear()
 	tileArray.clear()
 	currTileArrayX = -1
 	currTileArrayY = -1
@@ -102,7 +103,7 @@ func generate_map():
 	
 	determine_tile_groups() #determine the continents
 	
-	print_tilegroups()
+	print_continents()
 	
 	for tileRow in tileArray:
 		for tile in tileRow:
@@ -201,98 +202,98 @@ func link_tile_to_neighbors(tileArrayX,tileArrayY):
 
 func determine_tile_groups():
 	#basically determines what island a given tile belongs to.
-	#also gathers data in the tileGroups dictionary that will prove useful later.
-	var tileGrouperY = -1
-	var tileGrouperX = -1
-	var tempTileGroup = 999999
+	#also gathers data in the continents dictionary that will prove useful later.
+	var continentGrouperY = -1
+	var continentGrouperX = -1
+	var tempContinent = 999999
 	for row in tileArray:
-		tileGrouperY += 1
+		continentGrouperY += 1
 		for tile in row:
-			tempTileGroup = 999999
-			tileGrouperX += 1
+			tempContinent = 999999
+			continentGrouperX += 1
 			if tile.tile_type != tile.TileType.SEA:
 				#check if any of the previous tiles it's connected to are part of a group. If they are, this one is too.
 				if tile.tileLinks[0][0].group > 0:
-					tempTileGroup = tile.tileLinks[0][0].group
-				if tile.tileLinks[0][1].group > 0 and tile.tileLinks[0][1].group != tempTileGroup:
-					if tile.tileLinks[0][1].group > tempTileGroup:
-						await combine_tilegroups(tempTileGroup,tile.tileLinks[0][1].group)
-					tempTileGroup = tile.tileLinks[0][1].group
-				if tile.tileLinks[0][2].group > 0 and tile.tileLinks[0][2].group != tempTileGroup:
-					if tile.tileLinks[0][2].group > tempTileGroup:
-						await combine_tilegroups(tempTileGroup,tile.tileLinks[0][2].group)
-					tempTileGroup = tile.tileLinks[0][2].group
-				if tile.tileLinks[1][0].group > 0 and tile.tileLinks[1][0].group != tempTileGroup:
-					if tile.tileLinks[1][0].group > tempTileGroup:
-						await combine_tilegroups(tempTileGroup,tile.tileLinks[1][0].group)
-					elif tempTileGroup != 999999:
-						await combine_tilegroups(tile.tileLinks[1][0].group, tempTileGroup)
+					tempContinent = tile.tileLinks[0][0].group
+				if tile.tileLinks[0][1].group > 0 and tile.tileLinks[0][1].group != tempContinent:
+					if tile.tileLinks[0][1].group > tempContinent:
+						await combine_continents(tempContinent,tile.tileLinks[0][1].group)
+					tempContinent = tile.tileLinks[0][1].group
+				if tile.tileLinks[0][2].group > 0 and tile.tileLinks[0][2].group != tempContinent:
+					if tile.tileLinks[0][2].group > tempContinent:
+						await combine_continents(tempContinent,tile.tileLinks[0][2].group)
+					tempContinent = tile.tileLinks[0][2].group
+				if tile.tileLinks[1][0].group > 0 and tile.tileLinks[1][0].group != tempContinent:
+					if tile.tileLinks[1][0].group > tempContinent:
+						await combine_continents(tempContinent,tile.tileLinks[1][0].group)
+					elif tempContinent != 999999:
+						await combine_continents(tile.tileLinks[1][0].group, tempContinent)
 						#This is dumb, but it seems to work, so... good enough for me.
-					tempTileGroup = tile.tileLinks[1][0].group
+					tempContinent = tile.tileLinks[1][0].group
 				
-				if tempTileGroup == 999999: #we didn't find an existing group so let's make a new one
-					tempTileGroup = add_new_tilegroup()
+				if tempContinent == 999999: #we didn't find an existing group so let's make a new one
+					tempContinent = add_new_continent()
 				
-				tile.set_group(tempTileGroup)
-				add_tile_to_tilegroups(tile,tile.group)
-		tileGrouperX = -1
+				tile.set_group(tempContinent)
+				add_tile_to_continents(tile,tile.group)
+		continentGrouperX = -1
 	#a little cleanup afterwards
-	for entry in tileGroups.keys():
-		if tileGroups[entry].is_empty():
-			tileGroups.erase(entry)
-		elif tileGroups[entry].count <= 6: #it only has 6 or fewer tiles? Too small, let's remove it.
-			for tile in tileGroups[entry]["list"]:
+	for entry in continents.keys():
+		if continents[entry].is_empty():
+			continents.erase(entry)
+		elif continents[entry].count <= 6: #it only has 6 or fewer tiles? Too small, let's remove it.
+			for tile in continents[entry]["list"]:
 				tile.set_tile_type(0)
 				#tile.$Label.visible = false
 				tile.set_group(0)
 		else:
-			tileGroups[entry]["centerpoint"] /= tileGroups[entry]["count"]
+			continents[entry]["centerpoint"] /= continents[entry]["count"]
 
-func remove_too_small_tilegroups(numTileLimit:int):
-	for entry in tileGroups.keys():
-		if tileGroups[entry]["count"] <= numTileLimit:
-			for tile in tileGroups[entry]["list"]:
+func remove_too_small_continents(numTileLimit:int):
+	for entry in continents.keys():
+		if continents[entry]["count"] <= numTileLimit:
+			for tile in continents[entry]["list"]:
 				tile.set_tile_type(0) #set each tile in the group to water
-			tileGroups.erase(entry) #and remove the tileGroup entirely
+			continents.erase(entry) #and remove the tileGroup entirely
 
-func add_tile_to_tilegroups(tile,tileGroup:int):
-	tileGroups[tileGroup]["count"] += 1
-	tileGroups[tileGroup]["list"].append(tile)
-	tileGroups[tileGroup]["centerpoint"] += tile.position
+func add_tile_to_continents(tile,continent:int):
+	continents[continent]["count"] += 1
+	continents[continent]["list"].append(tile)
+	continents[continent]["centerpoint"] += tile.position
 
-func combine_tilegroups(oldTileGroupToKeep:int,oldTileGroupToRemove:int):
+func combine_continents(oldContinentToKeep:int,oldContinentToRemove:int):
 	#for key in tileGroups[oldTileGroupToRemove]:
-	tileGroups[oldTileGroupToKeep]["count"] += tileGroups[oldTileGroupToRemove]["count"]
-	tileGroups[oldTileGroupToKeep]["list"].append_array(tileGroups[oldTileGroupToRemove]["list"])
-	tileGroups[oldTileGroupToKeep]["centerpoint"] += tileGroups[oldTileGroupToRemove]["centerpoint"]
-	for tile in tileGroups[oldTileGroupToRemove]["list"]: #make sure those tiles get the message!
-		tile.set_group(oldTileGroupToKeep)
-	tileGroups[oldTileGroupToRemove].clear()
+	continents[oldContinentToKeep]["count"] += continents[oldContinentToRemove]["count"]
+	continents[oldContinentToKeep]["list"].append_array(continents[oldContinentToRemove]["list"])
+	continents[oldContinentToKeep]["centerpoint"] += continents[oldContinentToRemove]["centerpoint"]
+	for tile in continents[oldContinentToRemove]["list"]: #make sure those tiles get the message!
+		tile.set_group(oldContinentToKeep)
+	continents[oldContinentToRemove].clear()
 		
 
-func add_new_tilegroup():
+func add_new_continent():
 	#make a blank tileGroup!
-	var newTileGroup = tileGroups.size() + 1
-	tileGroups[newTileGroup] = {}
-	tileGroups[newTileGroup]["count"] = 0
-	tileGroups[newTileGroup]["list"] = []
+	var newContinent = continents.size() + 1
+	continents[newContinent] = {}
+	continents[newContinent]["count"] = 0
+	continents[newContinent]["list"] = []
 	
-	tileGroups[newTileGroup]["centerpoint"] = Vector2.ZERO
+	continents[newContinent]["centerpoint"] = Vector2.ZERO
 	
 	var randomVector = Vector2.ZERO
 	randomVector.x = randf_range(-1,1)
 	randomVector.y = randf_range(-1,1)
-	tileGroups[newTileGroup]["vector"] = randomVector
-	return newTileGroup
+	continents[newContinent]["vector"] = randomVector
+	return newContinent
 
-func print_tilegroups():
+func print_continents():
 	var tempString = ""
-	for group in tileGroups.keys():
+	for continent in continents.keys():
 		tempString = ""
-		tempString = "Tile Group "+str(group)+":\n"
-		tempString += "    Count: "+str(tileGroups[group]["count"])+"\n"
-		tempString += "    Vector: "+str(tileGroups[group]["vector"].x)+", "+str(tileGroups[group]["vector"].x)+"\n"
-		tempString += "    Centerpoint: "+str(tileGroups[group]["centerpoint"])
+		tempString = "Tile Group "+str(continent)+":\n"
+		tempString += "    Count: "+str(continents[continent]["count"])+"\n"
+		tempString += "    Vector: "+str(continents[continent]["vector"].x)+", "+str(continents[continent]["vector"].x)+"\n"
+		tempString += "    Centerpoint: "+str(continents[continent]["centerpoint"])
 		print(tempString)
 
 func map_smoother():
