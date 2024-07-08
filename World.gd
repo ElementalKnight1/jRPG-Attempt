@@ -1,14 +1,14 @@
 extends Node2D
 
 const TileSize = 16
-const SeaLevel = 0.001 #0.1 for a few more islands; 0.01 for 2 continents; 0.001 for a big single continent
-const ForestLevel = 0.3
+const SeaLevel = 0.0005 #0.1 for a few more islands; 0.01 for 2 continents; 0.001 for a big single continent
+const ForestLevel = 0.25
 const MountainLevel = 0.7
 
-const MAP_SIZE_X = 64
-const MAP_SIZE_Y = 48
-const screen_width = ((TileSize * MAP_SIZE_X) / 2) - (TileSize / 2)
-const screen_height = ((TileSize * MAP_SIZE_Y) / 2) - (TileSize / 2)
+const MAP_SIZE_X = 64 + 1
+const MAP_SIZE_Y = 64 + 1 #plus 1, because of how it counts!
+const screen_width = ((TileSize * MAP_SIZE_X) / 2.0) - (TileSize)
+const screen_height = ((TileSize * MAP_SIZE_Y) / 2.0) - (TileSize)
 
 var tileArray = []
 var currTileArrayX = -1
@@ -57,6 +57,8 @@ func _ready():
 
 func place_character():
 	var randomContinent = continents.keys().pick_random()
+	if not randomContinent:
+		print("ERROR placing character! (Continent choise invalid)")
 	var randomTile = continents[randomContinent]["list"].pick_random()
 	if randomTile:
 		var tempPosition = randomTile.position
@@ -67,7 +69,7 @@ func place_character():
 		
 		currentCharacter.position = tempPosition
 	else:
-		print("ERROR placing character!")
+		print("ERROR placing character! (Random tile choice invalid)")
 	#print(currentCharacter.position) #TEST
 	#currentCharacter.play_anim("idle_sword_l") #for starting
 
@@ -86,19 +88,26 @@ func clear_map():
 func generate_map():
 	#Make map
 	altitude_noise.seed = randi()
+	var nearness_to_edge_y = 0
+	var nearness_to_edge_x = 0
+	var nearness_to_edge = 0
 	for n in MAP_SIZE_Y:
+		#TEST print(str(n))
 		# We divide by two so that half the tiles
 		# generate left/above center and half right/below
 		var y = n - MAP_SIZE_Y / 2.0
+		nearness_to_edge_y = absi(y) - (MAP_SIZE_Y / 2.0)
 		
 		currTileArrayY += 1
 		tileArray.append([])
 		for m in MAP_SIZE_X:
 			var x = m - MAP_SIZE_X / 2.0
+			nearness_to_edge_x = absi(x) - (MAP_SIZE_X / 2.0)
+			nearness_to_edge = min(abs(nearness_to_edge_x),abs(nearness_to_edge_y))
 			
-			currTileArrayX += 1
+			currTileArrayX += 1			
 			
-			generate_terrain_tile(x, y)
+			generate_terrain_tile(x, y, nearness_to_edge)
 		currTileArrayX = -1
 		
 		#await get_tree().create_timer(0.2).timeout #TEST
@@ -191,9 +200,9 @@ func _process(delta):
 	#OLD INPUT
 	#pass
 
-func generate_terrain_tile(x: int, y: int):
+func generate_terrain_tile(x: int, y: int, nearness_to_edge: int=16):
 	var tile = tile.instantiate()
-	tile.tile_type = altitude_value(x, y)
+	tile.tile_type = altitude_value(x, y, nearness_to_edge)
 	tile.position = Vector2(x, y) * TileSize
 	$Tiles.add_child(tile)
 	tileArray[currTileArrayY].append(tile)
@@ -443,8 +452,11 @@ func map_smoother():
 		smoothingX = -1
 		
 
-func altitude_value(x: int, y: int) -> Tile.TileType:
+func altitude_value(x: int, y: int,nearness_to_edge:int=16) -> Tile.TileType:
 	var value = altitude_noise.get_noise_2d(x, y)
+	if nearness_to_edge < 4:
+		#print("X: "+str(x)+", Y: "+str(y)+", Nearness Factor: "+str(nearness_to_edge))
+		value -= (4 - nearness_to_edge) * 0.2
 	
 	if value >= ForestLevel:
 		return Tile.TileType.FOREST
