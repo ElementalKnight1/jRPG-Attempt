@@ -12,7 +12,8 @@ enum TileType {
 }
 
 @export var tile_type: TileType
-@export var group: int
+@export var continent: int
+@export var region: int
 
 @onready var sprite := $Sprite2D
 
@@ -39,13 +40,23 @@ func set_tile_type(newTileType:int):
 		sprite.texture = load("res://sprites/world/forest_5.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
 
-func set_group(newGroup:int):
-	self.group = newGroup
-	$Label.text = str(self.group)
-	if newGroup != 0:
+func set_continent(newContinent:int):
+	self.continent = newContinent
+	$Label.text = str(self.continent)
+	if newContinent != 0:
 		$Label.visible = true
 	else:
 		$Label.visible = false
+
+func set_region(newRegion:int):
+	self.region = newRegion
+
+func activate_debug_color_overlay(newColor:Color):
+	$DebugColorOverlay.modulate = newColor
+	$DebugColorOverlay.visible = true
+
+func deactivate_debug_color_overlay():
+	$DebugColorOverlay.visible = false
 
 func set_edges():
 	var edgeString = ""
