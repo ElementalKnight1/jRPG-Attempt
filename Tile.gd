@@ -43,10 +43,13 @@ func set_tile_type(newTileType:int):
 func set_continent(newContinent:int):
 	self.continent = newContinent
 	$Label.text = str(self.continent)
-	if newContinent != 0:
-		$Label.visible = true
-	else:
-		$Label.visible = false
+	#if newContinent != 0:
+		#$Label.visible = true
+	#else:
+		#$Label.visible = false
+
+func toggle_continent_ID():
+	$Label.visible = not $Label.visible
 
 func set_region(newRegion:int):
 	self.region = newRegion

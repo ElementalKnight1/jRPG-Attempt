@@ -58,13 +58,16 @@ func _ready():
 func place_character():
 	var randomContinent = continents.keys().pick_random()
 	var randomTile = continents[randomContinent]["list"].pick_random()
-	var tempPosition = randomTile.position
+	if randomTile:
+		var tempPosition = randomTile.position
 	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
-	tempPosition += Vector2.ONE * TileSize/2
-	if SignalBus.map_starting_location != Vector2.ONE:
-		tempPosition = SignalBus.map_starting_location
+		tempPosition += Vector2.ONE * TileSize/2
+		if SignalBus.map_starting_location != Vector2.ONE:
+			tempPosition = SignalBus.map_starting_location
 		
-	currentCharacter.position = tempPosition
+		currentCharacter.position = tempPosition
+	else:
+		print("ERROR placing character!")
 	#print(currentCharacter.position) #TEST
 	#currentCharacter.play_anim("idle_sword_l") #for starting
 
@@ -75,6 +78,7 @@ func clear_map():
 				tile.queue_free()
 	
 	continents.clear()
+	regions.clear()
 	tileArray.clear()
 	currTileArrayX = -1
 	currTileArrayY = -1
@@ -103,7 +107,7 @@ func generate_map():
 	
 	determine_continents() #determine the continents
 	
-	print_continents()
+	#TEST print_continents()
 	
 	determine_regions_by_continent()
 	
@@ -257,15 +261,16 @@ func determine_continents():
 				tile.set_tile_type(0)
 				#tile.$Label.visible = false
 				tile.set_continent(0)
+			continents.erase(entry)
 		else:
 			continents[entry]["centerpoint"] /= continents[entry]["count"]
 
-func remove_too_small_continents(numTileLimit:int):
-	for entry in continents.keys():
-		if continents[entry]["count"] <= numTileLimit:
-			for tile in continents[entry]["list"]:
-				tile.set_tile_type(0) #set each tile in the micro-continent to water
-			continents.erase(entry) #and remove the continent entirely
+#func remove_too_small_continents(numTileLimit:int):
+	#for entry in continents.keys():
+		#if continents[entry]["count"] <= numTileLimit:
+			#for tile in continents[entry]["list"]:
+				#tile.set_tile_type(0) #set each tile in the micro-continent to water
+			#await continents.erase(entry) #and remove the continent entirely
 
 func add_tile_to_continents(tile,continent:int):
 	continents[continent]["count"] += 1
@@ -287,6 +292,7 @@ func add_new_continent():
 	continents[newContinent] = {}
 	continents[newContinent]["count"] = 0
 	continents[newContinent]["list"] = []
+	continents[newContinent]["regions"] = []
 	
 	continents[newContinent]["centerpoint"] = Vector2.ZERO
 	
@@ -315,7 +321,7 @@ func add_new_region():
 	regions[newRegion]["expanding edge tiles"] = []
 	regions[newRegion]["expanding pythagoras bit"] = true
 	regions[newRegion]["debug color"] = Color(randf(),randf(),randf(),0.5)
-	
+	regions[newRegion]["neighbor regions"] = []
 	regions[newRegion]["centerpoint"] = Vector2.ZERO
 	return newRegion
 
@@ -323,7 +329,7 @@ func add_tile_to_regions(tile,region:int):
 	tile.region = region
 	if regions[region]["count"] == 0:
 		regions[region]["origin"] = tile
-		regions[region]["expanding edge tiles"].append(tile)
+	regions[region]["expanding edge tiles"].append(tile)
 	regions[region]["count"] += 1
 	regions[region]["list"].append(tile)
 	regions[region]["centerpoint"] += tile.position
@@ -344,9 +350,12 @@ func expand_region(region:int):
 						#print("    Added a tile to region "+str(region))
 						add_tile_to_regions(linkedTile,region)
 						temp_claimed_tiles.append(linkedTile)
+					elif linkedTile.region != 0 and linkedTile.tile_type != 0: #an already-taken tile
+						if not regions[region]["neighbor regions"].has(linkedTile.region):
+							regions[region]["neighbor regions"].append(linkedTile.region)
 		regions[region]["expanding edge tiles"].erase(tile)
 	regions[region]["expanding pythagoras bit"] = not regions[region]["expanding pythagoras bit"]
-	print("Finished expanding region "+str(region)+". Number of tiles on the edge now: "+str(len(regions[region]["expanding edge tiles"])))
+	#print("Finished expanding region "+str(region)+". Number of tiles on the edge now: "+str(len(regions[region]["expanding edge tiles"])))
 	return temp_claimed_tiles
 
 func determine_regions_by_continent():
@@ -359,35 +368,47 @@ func determine_regions_by_continent():
 	var temp_tile_count = 0
 	var temp_count_of_regions_to_make = 0
 	var temp_captured_tiles = []
+	var done_expanding_regions = false
+	
 	for continent in continents.keys():
-		print("Determining regions for Continent "+str(continent)+"...")
+		#print("Determining regions for Continent "+str(continent)+"...")
 		#get the list of tiles; each continent starts fresh.
 		temp_continent_tile_list = continents[continent]["list"]
 		temp_tile_count = continents[continent]["count"]
 		temp_regions = []
 		#How many regions do we want?
 		temp_count_of_regions_to_make = int(temp_tile_count / 80) + 1
-		if randf() <= fmod((temp_tile_count / 80.0), 1.0):
+		if randf() <= fmod((temp_tile_count / 400.0), 1.0): #orig 80 for VERY dense-packed.
 			temp_count_of_regions_to_make += 1 #random chance of an additional one based on the math
 		while temp_count_of_regions_to_make > 0:
-			print("  Regions left to make: "+str(temp_count_of_regions_to_make))
+			#print("  Regions left to make: "+str(temp_count_of_regions_to_make))
 			#pick a random spot to be the origin of our new region.
 			temp_origin_tile = temp_continent_tile_list.pick_random()
 			temp_new_region = add_new_region()
+			continents[continent]["regions"].append(temp_new_region)
 			temp_regions.append(temp_new_region)
 			add_tile_to_regions(temp_origin_tile,temp_new_region)
 			temp_continent_tile_list.erase(temp_origin_tile)
 			#place that tile, and any tile within X tiles of it, 
 			#    into a new region, while removing them from the temp list.
-			for n in 3:
+			for n in 4:
 				temp_captured_tiles = expand_region(temp_new_region)
 				for capturedTile in temp_captured_tiles:
 					temp_continent_tile_list.erase(capturedTile)
 			temp_count_of_regions_to_make -= 1 #we did a region, so remove it.
+		
+		done_expanding_regions = false
+		while not done_expanding_regions:
+			temp_captured_tiles = []
+			for region in continents[continent]["regions"]:
+				temp_captured_tiles += expand_region(region)
+			if temp_captured_tiles.is_empty():
+				done_expanding_regions = true
 		#while not temp_continent_tile_list.is_empty():
 			#
 			#for region in temp_regions:
 				#print("Trying to fill out Region "+str(region)+"...")
+				#print(temp_continent_tile_list)
 				#temp_captured_tiles = expand_region(region)
 				#for capturedTile in temp_captured_tiles:
 					#temp_continent_tile_list.erase(capturedTile)
