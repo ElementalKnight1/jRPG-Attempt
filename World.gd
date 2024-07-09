@@ -18,6 +18,7 @@ var continents = {}
 var regions = {}
 var cheat_show_regions = false
 
+var progression_order = []
 var currentCharacter
 
 var inputs = {"move_right": Vector2.RIGHT,
@@ -46,7 +47,7 @@ func _ready():
 	
 	#And trying to place 'em somewhere
 	place_character()
-	
+	print("Character's Position: "+str(currentCharacter.position))
 	#set up camera
 	$Camera2D.make_current()
 	$Camera2D.position = currentCharacter.position
@@ -56,16 +57,20 @@ func _ready():
 	$Camera2D.set_limit(SIDE_TOP,(-1 * screen_height) - 16)
 
 func place_character():
-	var randomContinent = continents.keys().pick_random()
-	if not randomContinent:
-		print("ERROR placing character! (Continent choise invalid)")
-	var randomTile = continents[randomContinent]["list"].pick_random()
+	#var randomContinent = continents.keys().pick_random()
+	#if not randomContinent:
+	#	print("ERROR placing character! (Continent choise invalid)")
+	
+	var randomTile = regions[progression_order[0]]["origin"]#["list"].pick_random()
+	#var randomTile = regions[1]["origin"]#["list"].pick_random()
 	if randomTile:
 		var tempPosition = randomTile.position
+		print("Starting Region: " + str(progression_order[0])+"\n   Starting Position: " + str(tempPosition))
 	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
-		tempPosition += Vector2.ONE * TileSize/2
-		if SignalBus.map_starting_location != Vector2.ONE:
-			tempPosition = SignalBus.map_starting_location
+		#tempPosition += Vector2.ONE * TileSize/2
+		#if SignalBus.map_starting_location != Vector2.ONE:
+		#	print("Signal Bus is overriding the character's starting location, to "+str(SignalBus.map_starting_location))
+		#	tempPosition = SignalBus.map_starting_location
 		
 		currentCharacter.position = tempPosition
 	else:
@@ -120,6 +125,8 @@ func generate_map():
 	
 	determine_regions_by_continent()
 	
+	determine_progression_order()
+	
 	for tileRow in tileArray:
 		for tile in tileRow:
 			tile.set_edges()
@@ -164,22 +171,26 @@ func _unhandled_input(event):
 			for region in regions.keys():
 				for tile in regions[region]["list"]:
 					tile.activate_debug_color_overlay(regions[region]["debug color"])
+					if tile == regions[region]["origin"]:
+						tile.toggle_debug_label(str(region))
 			add_cheat_label("Showing Regions")
 		else:
 			for region in regions.keys():
 				for tile in regions[region]["list"]:
 					tile.deactivate_debug_color_overlay()
+					if tile == regions[region]["origin"]:
+						tile.toggle_debug_label(str(region))
 			remove_cheat_label("Showing Regions")
 			
 func add_cheat_label(text):
-	print("Adding cheat label: " + text)
+	#print("Adding cheat label: " + text)
 	var tempLabel = load("res://initiative_list_item.tscn").instantiate()
 	tempLabel.set_text(text)
 	$CanvasLayer/"Cheat Text Overlay Manager".add_child(tempLabel)
 	$CanvasLayer/"Cheat Text Overlay Manager".queue_redraw()
 
 func remove_cheat_label(text):
-	print("Removing cheat label: " + text)
+	#print("Removing cheat label: " + text)
 	for label in $CanvasLayer/"Cheat Text Overlay Manager".get_children():
 		if label.get_text() == text:
 			label.queue_free()
@@ -451,6 +462,53 @@ func map_smoother():
 				#print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": forcing water.")
 		smoothingX = -1
 		
+
+func determine_progression_order():
+	var temp_progression_order = []
+	var temp_region = 0
+	var temp_neighbors_list = []
+	var temp_regions_in_continent = []
+	var how_far_to_look_back = -1
+	var temp_continent_shuffle_list = continents.keys()
+	temp_continent_shuffle_list.shuffle()
+	for continent in temp_continent_shuffle_list:
+		#get first region at random
+		temp_regions_in_continent = continents[continent]["regions"]
+		temp_region = temp_regions_in_continent.pick_random()
+		temp_progression_order.append(temp_region)
+		#pick a random neighboring region
+		while len(temp_progression_order) < len(continents[continent]["regions"]):
+			#make a list of all the neighbors we DON'T have.
+			for x in regions[temp_region]["neighbor regions"]:
+				if not temp_progression_order.has(x):
+					temp_neighbors_list.append(x)
+			#print("Region "+str(temp_region)+"'s Temp Neighbors List: "+str(temp_neighbors_list))
+			#if the list exists at all and it isn't empty,
+			#pick one at random, and we'll traverse further down the tree there.
+			if len(temp_neighbors_list) > 0:
+				how_far_to_look_back = -1 #reset the look-back counter
+				temp_region = temp_neighbors_list.pick_random()
+				temp_progression_order.append(temp_region)
+				temp_neighbors_list = []
+			else:
+				#print("Region "+str(temp_region)+" has no more unvisited neighbors!")
+				#oh, there weren't any new neighbors to add here?
+				#let's go back another step.
+				how_far_to_look_back -= 1
+				if abs(how_far_to_look_back) < len(temp_progression_order):
+					temp_region = temp_progression_order[how_far_to_look_back]
+				else:
+					pass
+					#print("...I think we finished this continent? Hopefully?")
+			#print("Temp Progression Order: "+str(temp_progression_order))
+			temp_region = regions[temp_region]["neighbor regions"].pick_random()
+		#keep doing that until you don't have any neighboring regions new to the list.
+		# go backwards until you find a new one to check out?
+		progression_order += temp_progression_order
+		temp_progression_order = []
+		how_far_to_look_back = -1
+	print("Progression Order: \n"+str(progression_order))
+			
 
 func altitude_value(x: int, y: int,nearness_to_edge:int=16) -> Tile.TileType:
 	var value = altitude_noise.get_noise_2d(x, y)

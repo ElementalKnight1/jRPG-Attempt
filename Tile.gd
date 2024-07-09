@@ -42,7 +42,7 @@ func set_tile_type(newTileType:int):
 
 func set_continent(newContinent:int):
 	self.continent = newContinent
-	$Label.text = str(self.continent)
+	#$Label.text = str(self.continent)
 	#if newContinent != 0:
 		#$Label.visible = true
 	#else:
@@ -53,6 +53,12 @@ func toggle_continent_ID():
 
 func set_region(newRegion:int):
 	self.region = newRegion
+
+func toggle_debug_label(newText=""):
+	newText = str(newText) #safety
+	$Label.visible = not $Label.visible
+	if newText != "":
+		$Label.text = str(newText)
 
 func activate_debug_color_overlay(newColor:Color):
 	$DebugColorOverlay.modulate = newColor
