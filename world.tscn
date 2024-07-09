@@ -17,6 +17,8 @@ tile = ExtResource("2_wopk3")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
+[node name="DebugProgressionArrowHolder" type="CanvasLayer" parent="."]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Cheat Text Overlay Manager" type="VBoxContainer" parent="CanvasLayer"]

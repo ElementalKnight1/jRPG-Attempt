@@ -168,13 +168,18 @@ func _unhandled_input(event):
 	if event.is_action_pressed("cheat_show_regions"):
 		cheat_show_regions = not cheat_show_regions
 		if cheat_show_regions:
-			for region in regions.keys():
+			#var tempArrow = Line2D.new()
+			#$DebugProgressionArrowHolder.add_child(tempArrow)
+			
+			for region in progression_order:
+				#tempArrow.add_point(regions[region]["origin"].position)
 				for tile in regions[region]["list"]:
 					tile.activate_debug_color_overlay(regions[region]["debug color"])
 					if tile == regions[region]["origin"]:
 						tile.toggle_debug_label(str(region))
 			add_cheat_label("Showing Regions")
 		else:
+			#$DebugProgressionArrowHolder.get_child(0).queue_free()
 			for region in regions.keys():
 				for tile in regions[region]["list"]:
 					tile.deactivate_debug_color_overlay()
