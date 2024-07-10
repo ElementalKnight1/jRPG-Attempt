@@ -46,12 +46,13 @@ func set_tile_type(newTileType:int):
 	
 
 func does_tile_border_region(region:int):
-	#returns TRUE if the tile is touching the given region, or if you give it -1, if the tile is touching any other region.
+	#returns TRUE if the tile is touching the given region, 
+	#or if you give it -1, if the tile is touching any other region (but not region 0, ocean).
 	var answer = false
 	for row in tileLinks:
 		for tile in row:
 			if tile:
-				if tile.region == region or (region == -1 and tile.region != self.region):
+				if tile.region == region or (region == -1 and tile.region != self.region and tile.region != 0):
 					answer = true
 					
 	return answer

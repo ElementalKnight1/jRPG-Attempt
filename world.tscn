@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://fgy1ukrmkuw6" path="res://tile.tscn" id="2_wopk3"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_nevbf"]
+noise_type = 3
 frequency = 0.04
 
 [node name="World" type="Node2D"]
