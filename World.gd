@@ -465,9 +465,10 @@ func add_roadblocks_based_on_progression():
 				if regions[progression_order[i - 1]]["continent"] == regions[progression_order[i]]["continent"]:
 					print("Region "+str(progression_order[i])+" and Region "+str(progression_order[i - 1])+" are on the same continent, but don't connect!")
 					#Now we need to figure out where we're drawing the border.
+					#What region(s) border the region-to-be-blocked, but were earlier in progression?
 					for tile in regions[progression_order[i]]["list"]:
 						pass
-						if tile.does_tile_border_region(-1):
+						if tile.does_tile_border_region(-1): #-1 for any border at all
 							tile.set_tile_type(3)
 					pass 
 
