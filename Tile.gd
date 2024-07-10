@@ -37,9 +37,24 @@ func set_tile_type(newTileType:int):
 	elif tile_type == TileType.LAND:
 		sprite.texture = load("res://sprites/world/grass_5.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",true)
-	else:
+	elif tile_type == TileType.FOREST:
 		sprite.texture = load("res://sprites/world/forest_5.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+	elif tile_type == TileType.MOUNTAIN:
+		sprite.texture = load("res://sprites/world/mountain.png")
+		$Area2D/CollisionShape2D.set_deferred("disabled",false)
+	
+
+func does_tile_border_region(region:int):
+	#returns TRUE if the tile is touching the given region, or if you give it -1, if the tile is touching any other region.
+	var answer = false
+	for row in tileLinks:
+		for tile in row:
+			if tile:
+				if tile.region == region or (region == -1 and tile.region != self.region):
+					answer = true
+					
+	return answer
 
 func set_continent(newContinent:int):
 	self.continent = newContinent
@@ -82,7 +97,8 @@ func set_edges():
 	if tile_type == TileType.LAND: #TEST temp
 		#print("Checking a Land tile...") #TEST
 		if edgeString == "000000000":# and SignalBus.map_starting_location == Vector2.ONE:
-			SignalBus.map_starting_location = self.position
+			pass
+			#SignalBus.map_starting_location = self.position
 			#print("Found a good starting position!")
 	
 	if tile_type == TileType.SEA:

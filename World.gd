@@ -87,6 +87,7 @@ func clear_map():
 	continents.clear()
 	regions.clear()
 	tileArray.clear()
+	progression_order = []
 	currTileArrayX = -1
 	currTileArrayY = -1
 
@@ -126,6 +127,8 @@ func generate_map():
 	determine_regions_by_continent()
 	
 	determine_progression_order()
+	
+	add_roadblocks_based_on_progression()
 	
 	for tileRow in tileArray:
 		for tile in tileRow:
@@ -343,6 +346,7 @@ func add_new_region():
 	regions[newRegion]["count"] = 0
 	regions[newRegion]["list"] = []
 	regions[newRegion]["origin"] = null
+	regions[newRegion]["continent"] = 0
 	regions[newRegion]["expanding edge tiles"] = []
 	regions[newRegion]["expanding pythagoras bit"] = true
 	regions[newRegion]["debug color"] = Color(randf(),randf(),randf(),0.5)
@@ -356,6 +360,7 @@ func add_tile_to_regions(tile,region:int):
 	tile.region = region
 	if regions[region]["count"] == 0:
 		regions[region]["origin"] = tile
+		regions[region]["continent"] = tile.continent
 	regions[region]["expanding edge tiles"].append(tile)
 	regions[region]["count"] += 1
 	regions[region]["list"].append(tile)
@@ -442,6 +447,22 @@ func determine_regions_by_continent():
 					#temp_continent_tile_list.erase(capturedTile)
 		
 		#Then fill in the rest of the tiles on that continent by expanding each region, bit by bit.
+
+func add_roadblocks_based_on_progression():
+	for i in len(progression_order):
+		if i > 0: #we don't care about the first region, thanks
+			pass
+			if not regions[progression_order[i - 1]]["neighbor regions"].has(progression_order[i]):
+				#this region is NOT neighbors with the immediately prior one
+				#But are they even on the same landmass? We aren't worried if there's an ocean between them.
+				if regions[progression_order[i - 1]]["continent"] == regions[progression_order[i]]["continent"]:
+					print("Region "+str(progression_order[i])+" and Region "+str(progression_order[i - 1])+" are on the same continent, but don't connect!")
+					#Now we need to figure out where we're drawing the border.
+					for tile in regions[progression_order[i]]["list"]:
+						pass
+						if tile.does_tile_border_region(-1):
+							tile.set_tile_type(3)
+					pass 
 
 func map_smoother():
 	#if two tiles of the same type are bookending something that isn't of that type,
