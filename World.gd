@@ -47,7 +47,7 @@ func _ready():
 	
 	#And trying to place 'em somewhere
 	place_character()
-	print("Character's Position: "+str(currentCharacter.position))
+	#print("Character's Position: "+str(currentCharacter.position))
 	#set up camera
 	$Camera2D.make_current()
 	$Camera2D.position = currentCharacter.position
@@ -65,7 +65,7 @@ func place_character():
 	#var randomTile = regions[1]["origin"]#["list"].pick_random()
 	if randomTile:
 		var tempPosition = randomTile.position
-		print("Starting Region: " + str(progression_order[0])+"\n   Starting Position: " + str(tempPosition))
+		#print("Starting Region: " + str(progression_order[0])+"\n   Starting Position: " + str(tempPosition))
 	#var tempPosition = position.snapped(Vector2.ONE * TileSize)
 		#tempPosition += Vector2.ONE * TileSize/2
 		#if SignalBus.map_starting_location != Vector2.ONE:
@@ -351,6 +351,8 @@ func add_new_region():
 	return newRegion
 
 func add_tile_to_regions(tile,region:int):
+	if tile == null:
+		print("ERROR: Null Tile in the 'add_tile_to_regions' function.")
 	tile.region = region
 	if regions[region]["count"] == 0:
 		regions[region]["origin"] = tile
@@ -393,6 +395,7 @@ func determine_regions_by_continent():
 	var temp_tile_count = 0
 	var temp_count_of_regions_to_make = 0
 	var temp_captured_tiles = []
+	var tiles_needed_for_region = 160.0 #orig 80 for VERY dense-packed.
 	var done_expanding_regions = false
 	
 	for continent in continents.keys():
@@ -402,8 +405,8 @@ func determine_regions_by_continent():
 		temp_tile_count = continents[continent]["count"]
 		temp_regions = []
 		#How many regions do we want?
-		temp_count_of_regions_to_make = int(temp_tile_count / 80) + 1
-		if randf() <= fmod((temp_tile_count / 400.0), 1.0): #orig 80 for VERY dense-packed.
+		temp_count_of_regions_to_make = int(temp_tile_count / tiles_needed_for_region) + 1
+		if randf() <= fmod((temp_tile_count / tiles_needed_for_region), 1.0): 
 			temp_count_of_regions_to_make += 1 #random chance of an additional one based on the math
 		while temp_count_of_regions_to_make > 0:
 			#print("  Regions left to make: "+str(temp_count_of_regions_to_make))
@@ -466,7 +469,10 @@ func map_smoother():
 				tile.set_tile_type(tile.TileType.SEA)
 				#print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": forcing water.")
 		smoothingX = -1
-		
+		#
+#func sort_continents_by_tile_count(a,b):
+	##bigger continents first
+	#return continents[a]["count"] > continents[b]["count"]
 
 func determine_progression_order():
 	var temp_progression_order = []
@@ -475,7 +481,9 @@ func determine_progression_order():
 	var temp_regions_in_continent = []
 	var how_far_to_look_back = -1
 	var temp_continent_shuffle_list = continents.keys()
-	temp_continent_shuffle_list.shuffle()
+	#temp_continent_shuffle_list.shuffle()
+	temp_continent_shuffle_list.sort_custom(func(a,b):return continents[a]["count"] > continents[b]["count"])
+	#Sort the continents by size, largest first. Let's explore the biggest landmass, and go down from there.
 	for continent in temp_continent_shuffle_list:
 		#get first region at random
 		temp_regions_in_continent = continents[continent]["regions"]
@@ -484,10 +492,11 @@ func determine_progression_order():
 		#pick a random neighboring region
 		while len(temp_progression_order) < len(continents[continent]["regions"]):
 			#make a list of all the neighbors we DON'T have.
+			
 			for x in regions[temp_region]["neighbor regions"]:
 				if not temp_progression_order.has(x):
 					temp_neighbors_list.append(x)
-			#print("Region "+str(temp_region)+"'s Temp Neighbors List: "+str(temp_neighbors_list))
+			print("Region "+str(temp_region)+"'s Temp Neighbors List: "+str(temp_neighbors_list))
 			#if the list exists at all and it isn't empty,
 			#pick one at random, and we'll traverse further down the tree there.
 			if len(temp_neighbors_list) > 0:
@@ -499,14 +508,16 @@ func determine_progression_order():
 				#print("Region "+str(temp_region)+" has no more unvisited neighbors!")
 				#oh, there weren't any new neighbors to add here?
 				#let's go back another step.
+				temp_neighbors_list = []
 				how_far_to_look_back -= 1
-				if abs(how_far_to_look_back) < len(temp_progression_order):
+				if abs(how_far_to_look_back) <= len(temp_progression_order):
 					temp_region = temp_progression_order[how_far_to_look_back]
 				else:
 					pass
+					#print("ERROR: Ran out of regions to look at!")
 					#print("...I think we finished this continent? Hopefully?")
 			#print("Temp Progression Order: "+str(temp_progression_order))
-			temp_region = regions[temp_region]["neighbor regions"].pick_random()
+			#temp_region = regions[temp_region]["neighbor regions"].pick_random()
 		#keep doing that until you don't have any neighboring regions new to the list.
 		# go backwards until you find a new one to check out?
 		progression_order += temp_progression_order

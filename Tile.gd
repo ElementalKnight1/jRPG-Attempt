@@ -8,7 +8,8 @@ var edgesArray = [[0,0,0],[0,0,0],[0,0,0]]
 enum TileType {
 	SEA,
 	LAND,
-	FOREST
+	FOREST,
+	MOUNTAIN
 }
 
 @export var tile_type: TileType
