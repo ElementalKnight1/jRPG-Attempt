@@ -1,0 +1,42 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b6x1ada2kcek4"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_pdnmj"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_pdnmj")
+character_type = "enemy"
+character_name = "Test Snake"
+character_class_name = ""
+level = 4
+experience = 10
+agility = 5
+charisma = 5
+initiative = 5
+knowledge = 5
+perception = 5
+skill = 5
+spirit = 5
+strength = 5
+vitality = 5
+willpower = 5
+HP = 40
+HPmax = 40
+MP = 40
+MPmax = 40
+SP = 40
+SPmax = 40
+Equipment = {}
+Personality = ""
+Gender = ""
+sprite_override = "res://sprites/enemies/snake.png"
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []
+SkillDictionary = {}
+BattleAI = [["Attack", "Basic Physical Attack"], ["Target", {
+"one_or_all": "one",
+"side": "hero"
+}]]
+BattleAIMemory = {}
