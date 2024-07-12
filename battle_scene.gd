@@ -17,9 +17,10 @@ func _ready():
 	add_character("res://test_char_30.tres")
 	add_character("res://test_char_10.tres")
 	#add_character("res://blue_slime.tres")
-	add_character("res://red_dragon.tres")
-	add_character("res://blue_slime.tres")
-	#add_character("res://blue_slime.tres")
+	add_character("res://data/enemies/red_dragon.tres")
+	add_character("res://data/enemies/test_snake.tres")
+	add_character("res://data/enemies/blue_slime.tres")
+
 	#$Character01.load_stats("res://test_char_30.tres")
 	#$Enemy01.load_stats("res://test_dragon.tres")
 	#$Enemy02.load_stats("res://test_dragon.tres")

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cg2i6vyphinmu"]
+
+[ext_resource type="Script" path="res://character_stats.gd" id="1_vobvc"]
+
+[resource]
+script = ExtResource("1_vobvc")
+character_type = "enemy"
+character_name = "Blue Slime"
+character_class_name = ""
+level = 2
+experience = 0
+agility = 2
+charisma = 2
+initiative = 2
+knowledge = 2
+perception = 2
+skill = 2
+spirit = 2
+strength = 2
+vitality = 2
+willpower = 2
+HP = 20
+HPmax = 20
+MP = 20
+MPmax = 20
+SP = 20
+SPmax = 20
+EquipHandL = []
+EquipHandR = []
+EquipHead = []
+EquipBody = []
+EquipLegs = []
+EquipAccessory1 = []
+EquipAccessory2 = []
+Personality = ""
+Gender = ""
+StyleHair = []
+StyleSkin = []
+StyleBody = []
+ElementalAttributes = []

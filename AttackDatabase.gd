@@ -1,6 +1,14 @@
 extends Node #Resource
 
-@export var data = {"Mega Impact Hammer":[
+@export var data = {
+	"Basic Physical Attack":[
+		{"type":"definitions","name":"Basic Attack","default_target":"enemy","target":"single","description":"A Basic physical attack."},
+		{"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4},
+		{"type":"FX","position":"target","path":"fx_impact_01","flip":true},
+		{"type":"damage","damage_stat":"strength","defense_stat":"vitality",
+								"damage_stat_multiplier":1,"element":"none"}
+	],
+	"Mega Impact Hammer":[
 		{"type":"definitions","name":"Mega Impact Hammer","default_target":"enemy","target":"single","description":"A powerful hammer blow."},
 		{"type":"dialogue","text":"Mega Impact Hammer","timer":2.0},
 		{"type":"animation","animation":"attack_sword_l_2","position":"user","timer":0.4},

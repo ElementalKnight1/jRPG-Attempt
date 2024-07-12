@@ -14,6 +14,8 @@ tile = ExtResource("2_wopk3")
 
 [node name="Tiles" type="Node" parent="."]
 
+[node name="MapObjects" type="Node" parent="."]
+
 [node name="Characters" type="Node" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]

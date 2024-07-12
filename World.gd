@@ -19,6 +19,9 @@ var regions = {}
 var cheat_show_regions = false
 
 var progression_order = []
+
+@export var mapObjects = []
+
 var currentCharacter
 
 var inputs = {"move_right": Vector2.RIGHT,
