@@ -29,6 +29,7 @@ var inputs = {"move_right": Vector2.RIGHT,
 			"move_up": Vector2.UP,
 			"move_down": Vector2.DOWN}
 var pressed_direction = Vector2.ZERO
+var pressed_horizontal = false
 
 const CharacterResource = preload("res://character.tscn")
 
@@ -136,20 +137,8 @@ func generate_map():
 	for tileRow in tileArray:
 		for tile in tileRow:
 			tile.set_edges()
-			
+
 func _unhandled_input(event):
-	pressed_direction = Vector2.ZERO
-	if event.is_action("move_up") or event.is_action("move_down"):
-		#pressed_direction = Vector2.ZERO
-		pressed_direction.y = Input.get_axis("move_up","move_down")
-		if pressed_direction.y == 0.0:
-			pressed_direction.x = Input.get_axis("move_left","move_right")
-	elif event.is_action("move_left") or event.is_action("move_right"):
-		#pressed_direction = Vector2.ZERO
-		pressed_direction.x = Input.get_axis("move_left","move_right")
-		if pressed_direction.x == 0.0:
-			pressed_direction.y = Input.get_axis("move_down","move_up")
-			
 	if event.is_action_pressed("debug_refresh"): #F5, of course
 		print("Regenerating map...")
 		add_cheat_label("Regenerating Map...")
@@ -218,9 +207,27 @@ func move(character, dir):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	input_capture()
 	move(currentCharacter,pressed_direction)
 	#OLD INPUT
 	#pass
+
+func input_capture():
+	var new_direction = Vector2(
+		Input.get_axis( "move_left", "move_right" ), 
+		Input.get_axis( "move_up", "move_down" ) )
+	if Input.is_action_just_pressed( "move_left" ) or Input.is_action_just_pressed( "move_right" ) \
+	or Input.is_action_just_released( "move_up" ) or Input.is_action_just_released( "move_down" ):
+		pressed_horizontal = true
+	elif Input.is_action_just_pressed( "move_up" ) or Input.is_action_just_pressed( "move_down" ) \
+	or Input.is_action_just_released( "move_left" ) or Input.is_action_just_released( "move_right" ):
+		pressed_horizontal = false
+	if new_direction.length_squared() > 1:
+		if pressed_horizontal:
+			new_direction.y = 0
+		else:
+			new_direction.x = 0
+	pressed_direction = new_direction
 
 func generate_terrain_tile(x: int, y: int, nearness_to_edge: int=16):
 	var tile = tile.instantiate()
@@ -461,9 +468,10 @@ func add_roadblocks_based_on_progression():
 				if regions[progression_order[i - 1]]["continent"] == regions[progression_order[i]]["continent"]:
 					print("Region "+str(progression_order[i])+" and Region "+str(progression_order[i - 1])+" are on the same continent, but don't connect!")
 					#Now we need to figure out where we're drawing the border.
+					#What region(s) border the region-to-be-blocked, but were earlier in progression?
 					for tile in regions[progression_order[i]]["list"]:
 						pass
-						if tile.does_tile_border_region(-1):
+						if tile.does_tile_border_region(-1): #-1 for any border at all
 							tile.set_tile_type(3)
 					pass 
 
