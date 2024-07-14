@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbryw8ovojmj5"]
+
+[ext_resource type="Script" path="res://scenes/home_screen.gd" id="1_okyfl"]
+
+[node name="HomeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_okyfl")
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="NewGame" type="Button" parent="Column"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "New Game
+"
+
+[node name="LoadGame" type="Button" parent="Column"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Load  Game"
+
+[connection signal="pressed" from="Column/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Column/LoadGame" to="." method="_on_load_game_pressed"]

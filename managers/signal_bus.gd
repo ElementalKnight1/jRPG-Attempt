@@ -6,7 +6,12 @@ signal end_of_turn()
 signal do_attack_from_instruction_list(user,target,instruction_list)
 signal character_died(character)
 
+signal scene_change(scene: SceneManager.SceneOption)
+signal gold_changed()
 
+signal save_game()
+signal load_game()
+signal successful_load()
 
 @export var combatants_dict = {"hero":[],"enemy":[]}
 @export var map_starting_location = Vector2.ONE
@@ -129,13 +134,3 @@ var tileEdgeSubstitutionDictionary = {
 	
 	
 }
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
