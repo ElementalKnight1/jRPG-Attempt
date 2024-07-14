@@ -5,6 +5,7 @@ extends Control
 func _ready():
 	SignalBus.connect("gold_changed", gold_changed)
 	SignalBus.connect("successful_load", gold_changed)
+	gold_changed()
 
 func gold_changed():
 	display_gold.text = "%d gp" % PersistentData.player_inventory.gold
