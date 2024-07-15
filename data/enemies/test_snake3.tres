@@ -1,10 +1,10 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b11lg8udnxxac"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://17tduu6pueu8"]
 
-[ext_resource type="Script" path="res://character_stats.gd" id="1_fjkkc"]
+[ext_resource type="Script" path="res://character_stats.gd" id="1_eepf7"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_fjkkc")
+script = ExtResource("1_eepf7")
 character_type = "enemy"
 character_name = "Test Snake"
 character_class_name = ""

@@ -80,7 +80,7 @@ func get_character_size():
 	
 func load_stats(filepath):
 	if ResourceLoader.exists(filepath):
-		stats = ResourceLoader.load(filepath)
+		stats = ResourceLoader.load(filepath).duplicate()
 
 func get_stat(statistic):
 	#print(stats)
