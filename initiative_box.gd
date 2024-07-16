@@ -86,9 +86,11 @@ func clean_initiative_array():
 	var i = 0
 	var indices_to_remove = []
 	for character in characters_to_remove:
+		print("I want to remove "+str(character)+" from initiative.")
 		i = 0
-		while i < len(initiative_array) - 1:
+		while i < len(initiative_array):
 			#print("Trying to find them...")
+			print(str(i),str(initiative_array[i]))
 			if initiative_array[i][0] == character:
 				#print("FOUND 'EM in the Initiative Array, at position "+str(i))
 				indices_to_remove.append(i)
@@ -96,10 +98,13 @@ func clean_initiative_array():
 			i += 1
 		#character.really_remove_from_fight()
 	indices_to_remove.sort_custom(sort_ascending)
+	print("Indices to remove: "+str(indices_to_remove)) #TEST
+	#print(initiative_row_holder)
 	for index in indices_to_remove:
-		initiative_row_holder[i].queue_free()
-		initiative_row_holder.remove_at(i) #remove it from the UI elements too, which actually controls things.
-		initiative_array.remove_at(i)
+		print("Removing index "+str(index)+" from initiative.")
+		initiative_row_holder[index].queue_free()
+		initiative_row_holder.remove_at(index) #remove it from the UI elements too, which actually controls things.
+		initiative_array.remove_at(index)
 	
 	characters_to_remove = []
 

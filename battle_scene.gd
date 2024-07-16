@@ -48,7 +48,7 @@ func add_character(resource_string = ""):
 		tempChar.load_stats(resource_string)
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
 		tempChar.override_sprite()
-		print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
+		#TEST print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
 		
 	#print("Adding: "+tempChar.get_stat("character_name"))
 	$Combatants.add_child(tempChar) #probably wanna organize this a bit more, 
@@ -94,7 +94,7 @@ func start_next_turn(character):
 		else: #we have an AI script to work with, yay!
 			var enemyTurnOutput = $EnemyAIHelper.evaluate_BattleAI(character)
 			var enemyAttack = AttackDatabase.get_attack(enemyTurnOutput["Attack"])
-			print(enemyTurnOutput)
+			#TEST print(enemyTurnOutput)
 			#print(enemyAttack)
 			$AttackHelper.do_attack_from_instruction_list(character,enemyTurnOutput["Target"],enemyAttack)
 			#$AttackHelper.spell_fire(character,SignalBus.combatants_dict["hero"][0])

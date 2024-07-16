@@ -19,7 +19,7 @@ func evaluate_BattleAI(character):
 	var currTarget = null
 	var currAttack = ""
 	for curr_row in character.get_stat("BattleAI"):
-		print(str(curr_row))
+		#TEST print(str(curr_row))
 		if curr_row[0] == "Attack":
 			currAttack = curr_row[1]
 		elif curr_row[0] == "Target":
