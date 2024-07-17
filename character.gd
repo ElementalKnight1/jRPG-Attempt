@@ -116,7 +116,20 @@ func remove_character_from_fight():
 func set_stat(statistic, new_value):
 	stats.set(statistic,new_value)
 	#$CharacterStatistics.set(statistic,new_value)
-	
+
+func calculate_stat_from_growth_rate(statistic):
+	if statistic != "Max HP" and statistic != "Max MP":
+		var temp_growth_stat = "growth_"+str(statistic)
+		var temp_growth_stat_value = stats.get(temp_growth_stat)
+		var temp_stat = StatGrowth.level_table[temp_growth_stat_value][stats.get("level")-1]
+		stats.set(statistic,temp_stat)
+	elif statistic == "Max HP":
+		var temp_max_HP = 29 + round((stats.get("level") / 1.5) * (stats.get("vitality") / 1.5))
+		stats.set(statistic, temp_max_HP)
+	elif statistic == "Max MP":
+		var temp_max_MP = 29 + round((stats.get("level") / 1.5) * (stats.get("willpower") / 1.5))
+		stats.set(statistic, temp_max_MP)
+
 	##Check if this character has the animation in question.
 func has_anim(desired_anim):
 	if get_stat("character_type") == "enemy":

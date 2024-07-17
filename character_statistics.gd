@@ -44,6 +44,11 @@ extends Node
 ##Affects how much damage you receive from magical attacks.
 @export var willpower = 0 
 
+@export var growth_agility = 0
+@export var growth_knowledge = 0
+@export var growth_strength = 0
+@export var growth_vitality = 0
+@export var growth_willpower = 0
 
 
 

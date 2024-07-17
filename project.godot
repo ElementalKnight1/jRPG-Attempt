@@ -21,6 +21,7 @@ MainMenu="*res://user_interface/main_menu.tscn"
 AttackDatabase="*res://attack_database.tscn"
 SignalBus="*res://managers/signal_bus.tscn"
 PersistentData="*res://managers/persistent_data.tscn"
+StatGrowth="*res://data/stat_growth.gd"
 
 [display]
 
