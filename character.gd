@@ -118,17 +118,38 @@ func set_stat(statistic, new_value):
 	#$CharacterStatistics.set(statistic,new_value)
 
 func calculate_stat_from_growth_rate(statistic):
-	if statistic != "Max HP" and statistic != "Max MP":
+	
+	if statistic != "HPmax" and statistic != "MPmax":
+		statistic = statistic.to_lower()
 		var temp_growth_stat = "growth_"+str(statistic)
 		var temp_growth_stat_value = stats.get(temp_growth_stat)
 		var temp_stat = StatGrowth.level_table[temp_growth_stat_value][stats.get("level")-1]
 		stats.set(statistic,temp_stat)
-	elif statistic == "Max HP":
+	elif statistic == "HPmax":
 		var temp_max_HP = 29 + round((stats.get("level") / 1.5) * (stats.get("vitality") / 1.5))
 		stats.set(statistic, temp_max_HP)
-	elif statistic == "Max MP":
+	elif statistic == "MPmax":
 		var temp_max_MP = 29 + round((stats.get("level") / 1.5) * (stats.get("willpower") / 1.5))
 		stats.set(statistic, temp_max_MP)
+
+func calculate_all_stats():
+	calculate_stat_from_growth_rate("Agility")
+	calculate_stat_from_growth_rate("Knowledge")
+	calculate_stat_from_growth_rate("Strength")
+	calculate_stat_from_growth_rate("Vitality")
+	calculate_stat_from_growth_rate("Willpower")
+	
+	calculate_stat_from_growth_rate("HPmax")
+	calculate_stat_from_growth_rate("MPmax")
+
+func print_character_stats():
+	print(stats.get("character_name")+" stats: ")
+	print("  LEVEL: "+str(stats.get("level")))
+	print("  Agility: "+str(stats.get("agility"))+" ("+str(stats.get("growth_agility"))+" / 5)")
+	print("  Knowledge: "+str(stats.get("knowledge"))+" ("+str(stats.get("growth_knowledge"))+" / 5)")
+	print("  Strength: "+str(stats.get("strength"))+" ("+str(stats.get("growth_strength"))+" / 5)")
+	print("  Vitality: "+str(stats.get("vitality"))+" ("+str(stats.get("growth_vitality"))+" / 5)")
+	print("  Willpower: "+str(stats.get("willpower"))+" ("+str(stats.get("growth_willpower"))+" / 5)")
 
 	##Check if this character has the animation in question.
 func has_anim(desired_anim):

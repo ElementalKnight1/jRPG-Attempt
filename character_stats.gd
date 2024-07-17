@@ -45,6 +45,12 @@ extends Resource
 ##Affects how much damage you receive from social attacks.
 @export var willpower = 0 
 
+@export var growth_agility:float = 0.0
+@export var growth_knowledge:float = 0.0
+@export var growth_strength:float = 0.0
+@export var growth_vitality:float = 0.0
+@export var growth_willpower:float = 0.0
+
 
 
 

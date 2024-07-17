@@ -16,6 +16,7 @@ func _ready():
 	#TEST Need to set up the fight in a more generic way
 	add_character("res://test_char_30.tres")
 	add_character("res://test_char_10.tres")
+	add_character("res://test_char.tres")
 	#add_character("res://blue_slime.tres")
 	add_character("res://data/enemies/red_dragon.tres")
 	add_character("res://data/enemies/test_snake3.tres")
@@ -49,7 +50,11 @@ func add_character(resource_string = ""):
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
 		tempChar.override_sprite()
 		#TEST print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
-		
+	
+	if tempChar.get_stat("character_name") == "TEST Growth Character":
+		tempChar.calculate_all_stats()
+		tempChar.print_character_stats()
+	
 	#print("Adding: "+tempChar.get_stat("character_name"))
 	$Combatants.add_child(tempChar) #probably wanna organize this a bit more, 
 						#so the tree is pretty and heroes / enemies are organized properly.
