@@ -25,6 +25,9 @@ extends Node
 
 ##How often you land your attacks.
 @export var perception = 0
+
+##Affects how often you are struck by status effects and critical hits.
+@export var resilience = 0
  
 ##Affects the range on normal and critical damage, and how often you apply status effects.
 @export var skill = 0 
