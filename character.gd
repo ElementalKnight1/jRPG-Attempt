@@ -126,10 +126,10 @@ func calculate_stat_from_growth_rate(statistic):
 		var temp_stat = StatGrowth.level_table[temp_growth_stat_value][stats.get("level")-1]
 		stats.set(statistic,temp_stat)
 	elif statistic == "HPmax":
-		var temp_max_HP = 29 + round((stats.get("level") / 1.5) * (stats.get("vitality") / 1.5))
+		var temp_max_HP = round((3.0 * (stats.get("level") ** 1.2)) + (6.5 * stats.get("vitality") ** 1.32))
 		stats.set(statistic, temp_max_HP)
 	elif statistic == "MPmax":
-		var temp_max_MP = 29 + round((stats.get("level") / 1.5) * (stats.get("willpower") / 1.5))
+		var temp_max_MP = round((0.5 * (stats.get("level") ** 1.2)) + (2.0 * stats.get("willpower") ** 1.1))
 		stats.set(statistic, temp_max_MP)
 
 func calculate_all_stats():
@@ -145,6 +145,8 @@ func calculate_all_stats():
 func print_character_stats():
 	print(stats.get("character_name")+" stats: ")
 	print("  LEVEL: "+str(stats.get("level")))
+	print("  HP: "+str(stats.get("HP"))+" / "+str(stats.get("HPmax")))
+	print("  MP: "+str(stats.get("MP"))+" / "+str(stats.get("MPmax")))
 	print("  Agility: "+str(stats.get("agility"))+" ("+str(stats.get("growth_agility"))+" / 5)")
 	print("  Knowledge: "+str(stats.get("knowledge"))+" ("+str(stats.get("growth_knowledge"))+" / 5)")
 	print("  Strength: "+str(stats.get("strength"))+" ("+str(stats.get("growth_strength"))+" / 5)")
