@@ -53,11 +53,13 @@ func next_turn():
 func create_initiative_list():
 	var temp_initiative_array = []
 	var temp_array = []
+	var temp_initiative_score = 0
 	for side in ["hero","enemy"]:
 		for character in SignalBus.combatants_dict[side]:
 			temp_array = []
 			temp_array.append(character)
-			temp_array.append(character.get_stat("initiative")) #this can be more dynamic and interesting later.
+			temp_initiative_score = randi_range(0,character.get_stat("agility"))
+			temp_array.append(temp_initiative_score) #this can be more dynamic and interesting later.
 			temp_initiative_array.append(temp_array)
 	temp_initiative_array.sort_custom(func(a, b): return a[1] > b[1])
 	return temp_initiative_array
