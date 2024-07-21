@@ -3,7 +3,7 @@ extends Node2D
 @export var stats: Resource
 @export var isMoving = false
 @export var facing = "d"
-@export var is_protagonist = false
+@export var is_protagonist = true
 @export var cheat_walk_through_walls = false
 @export var cheat_move_faster = false
 @export var movementSpeedFactor = 4.0
@@ -60,6 +60,8 @@ func move(dir):
 		tween.tween_property(self, "position",
 			position + dir * 16, 1.0/self.movementSpeedFactor).set_trans(Tween.TRANS_LINEAR)
 		self.isMoving = true
+		if is_protagonist:
+			SignalBus.increment_encounter_step_counter()
 		#if we aren't playing the animation already, start it.
 		if $CharacterSpritesBase.get_animation() != "walk_"+facing:
 			play_anim("walk_"+facing,false)

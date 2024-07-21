@@ -15,6 +15,7 @@ signal successful_load()
 
 @export var combatants_dict = {"hero":[],"enemy":[]}
 @export var map_starting_location = Vector2.ONE
+@export var encounter_step_counter:int = 0
 
 var tileEdgeSubstitutionDictionary = {
 	"000001001":"000001000",
@@ -134,3 +135,17 @@ var tileEdgeSubstitutionDictionary = {
 	
 	
 }
+
+func increment_encounter_step_counter(ignore_random_encounters:bool=false):
+	encounter_step_counter += 1
+	print(str(encounter_step_counter)) #TEST
+	if not ignore_random_encounters:
+		if randi_range(0,255) <= 6: 
+			#frankly we'll want a better methodology, but that's for later.
+			#at the least: walking through a forest should make it more likely to get an encounter.
+			# see https://gamefaqs.gamespot.com/snes/564868-dragon-quest-i-and-ii/faqs/61640 for how DQ1 does it
+			print("THE SIGNAL BUS SAYS: IT'S RANDOM ENCOUNTER TIME!") #TEST
+			reset_encounter_step_counter()
+
+func reset_encounter_step_counter():
+	encounter_step_counter = 0
