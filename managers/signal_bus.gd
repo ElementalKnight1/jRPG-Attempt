@@ -140,7 +140,7 @@ func increment_encounter_step_counter(ignore_random_encounters:bool=false):
 	encounter_step_counter += 1
 	print(str(encounter_step_counter)) #TEST
 	if not ignore_random_encounters:
-		if randi_range(0,255) <= 6: 
+		if randi_range(0,255) <= 6 and encounter_step_counter > 6: 
 			#frankly we'll want a better methodology, but that's for later.
 			#at the least: walking through a forest should make it more likely to get an encounter.
 			# see https://gamefaqs.gamespot.com/snes/564868-dragon-quest-i-and-ii/faqs/61640 for how DQ1 does it
