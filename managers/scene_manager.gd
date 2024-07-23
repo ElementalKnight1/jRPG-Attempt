@@ -8,6 +8,8 @@ enum SceneOption {
 	HOME_SCREEN,
 	DUMMY_SCENE_1,
 	DUMMY_SCENE_2,
+	WORLD_MAP,
+	BATTLE
 }
 
 func scene_change(scene: SceneOption):
@@ -17,6 +19,10 @@ func scene_change(scene: SceneOption):
 			scene_path = "res://scenes/home_screen.tscn"
 		SceneOption.DUMMY_SCENE_1:
 			scene_path = "res://scenes/dummy_scene.tscn"
+		SceneOption.WORLD_MAP:
+			scene_path = "res://world.tscn"
+		SceneOption.BATTLE:
+			scene_path = "res://battle_scene.tscn"
 		_:
 			print( "Unable to find scene" ); return
 	get_tree().change_scene_to_file(scene_path)

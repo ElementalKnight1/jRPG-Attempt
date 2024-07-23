@@ -8,3 +8,9 @@ script = ExtResource("1_l5r6s")
 
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource("2_2g3mh")
+
+[node name="Characters" type="Node" parent="."]
+
+[node name="Hero" type="Node" parent="Characters"]
+
+[node name="Enemy" type="Node" parent="Characters"]

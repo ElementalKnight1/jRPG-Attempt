@@ -69,7 +69,6 @@ func add_character(resource_string = ""):
 		#enemy_array.append(tempChar)
 		SignalBus.combatants_dict["enemy"].append(tempChar)
 	tempChar.position = determine_combatant_starting_position(tempChar)
-	pass # Replace with function body.
 
 func determine_combatant_starting_position(tempChar):
 	var temp_position = Vector2.ZERO

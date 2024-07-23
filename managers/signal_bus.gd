@@ -1,5 +1,8 @@
 extends Node
 
+const BattleEnemyResource = preload("res://battle_enemy.tscn")
+const CharacterResource = preload("res://character.tscn")
+
 signal start_next_turn(character)
 signal end_of_round()
 signal end_of_turn()
@@ -140,12 +143,36 @@ func increment_encounter_step_counter(ignore_random_encounters:bool=false):
 	encounter_step_counter += 1
 	print(str(encounter_step_counter)) #TEST
 	if not ignore_random_encounters:
-		if randi_range(0,255) <= 6 and encounter_step_counter > 6: 
+		if randi_range(0,255) <= 206 and encounter_step_counter > 6:  
+			#for easy testing, this is at 206; should really be 6.
 			#frankly we'll want a better methodology, but that's for later.
 			#at the least: walking through a forest should make it more likely to get an encounter.
 			# see https://gamefaqs.gamespot.com/snes/564868-dragon-quest-i-and-ii/faqs/61640 for how DQ1 does it
 			print("THE SIGNAL BUS SAYS: IT'S RANDOM ENCOUNTER TIME!") #TEST
 			reset_encounter_step_counter()
+			emit_signal("scene_change",SceneManager.SceneOption.BATTLE)
 
 func reset_encounter_step_counter():
 	encounter_step_counter = 0
+
+func add_character(resource_string = ""):
+	var tempChar = CharacterResource.instantiate()
+	tempChar.load_stats(resource_string)
+	
+	if tempChar.get_stat("character_type") == "enemy":
+		tempChar = BattleEnemyResource.instantiate()
+		tempChar.load_stats(resource_string)
+		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
+		tempChar.override_sprite()
+		
+		get_node("Characters/Enemy").add_child(tempChar)
+		SignalBus.combatants_dict["enemy"].append(tempChar)
+	elif tempChar.get_stat("character_type") == "hero":	
+		get_node("Characters/Hero").add_child(tempChar)
+		SignalBus.combatants_dict["hero"].append(tempChar)
+	
+	#TEST
+	if tempChar.get_stat("character_name") == "TEST Growth Character":
+		tempChar.calculate_all_stats()
+		tempChar.print_character_stats()
+		
