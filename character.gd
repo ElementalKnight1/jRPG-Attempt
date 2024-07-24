@@ -60,15 +60,16 @@ func move(dir):
 		tween.tween_property(self, "position",
 			position + dir * 16, 1.0/self.movementSpeedFactor).set_trans(Tween.TRANS_LINEAR)
 		self.isMoving = true
-		if is_protagonist:
-			SignalBus.increment_encounter_step_counter()
 		#if we aren't playing the animation already, start it.
 		if $CharacterSpritesBase.get_animation() != "walk_"+facing:
 			play_anim("walk_"+facing,false)
 		await tween.finished
 		self.isMoving = false
+		if is_protagonist:
+			SignalBus.increment_encounter_step_counter()
 	else:
 		play_anim("idle_"+facing) #change facing
+		
 		
 
 

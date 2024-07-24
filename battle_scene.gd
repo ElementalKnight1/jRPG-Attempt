@@ -34,9 +34,11 @@ func _ready():
 	# to include enemies being loaded in from the SignalBus as well.
 	for tempChar in SignalBus.get_characters("hero"):
 		print(tempChar.get_stat("character_name"))
-		print(str(tempChar.position))
-		tempChar.position = determine_combatant_starting_position(tempChar)
-		print(str(tempChar.position))
+		print(str(tempChar.global_position))
+		tempChar.global_position = determine_combatant_starting_position(tempChar)
+		tempChar.isMoving = false
+		tempChar.play_anim("idle_sword_l_1",false)
+		print(str(tempChar.global_position))
 	#print(str(get_viewport().get_visible_rect().size)) #TEST
 	
 	#TEST need to set up color modulation in a more generic (and remembered) way, too
@@ -58,7 +60,6 @@ func add_character(resource_string = ""):
 		tempChar = BattleEnemyResource.instantiate()
 		tempChar.load_stats(resource_string)
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
-		tempChar.override_sprite()
 		#TEST print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
 	
 	if tempChar.get_stat("character_name") == "TEST Growth Character":
@@ -80,7 +81,7 @@ func add_character(resource_string = ""):
 		SignalBus.combatants_dict["enemy"].append(tempChar)
 	tempChar.position = determine_combatant_starting_position(tempChar)
 
-func determine_combatant_starting_position(tempChar):
+func determine_combatant_starting_position(tempChar, num_on_side:=-1):
 	var temp_position = Vector2.ZERO
 	if tempChar.get_stat("character_type") == "hero":
 		var num_heroes = len(SignalBus.combatants_dict["hero"]) - 1
@@ -92,6 +93,7 @@ func determine_combatant_starting_position(tempChar):
 		var num_enemies = len(SignalBus.combatants_dict["enemy"]) - 1
 		temp_position.x = 96 + (floor(num_enemies / 3) * 64)
 		temp_position.y = 160 + ((num_enemies % 3) * 64)
+	tempChar.global_position = temp_position #TEST
 	return temp_position
 
 func top_of_round():
@@ -99,6 +101,7 @@ func top_of_round():
 	pass
 
 func start_next_turn(character):
+	print(character.get_stat("character_name")+"'s Global Position: " + str(character.global_position)) #TEST
 	#print(character.get_stat("character_type"))
 	if character.get_stat("character_type") == "enemy":
 		#print(character.get_stat("character_name")) #TEST
