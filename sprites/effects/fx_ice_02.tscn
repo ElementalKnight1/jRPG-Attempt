@@ -117,6 +117,7 @@ animations = [{
 }]
 
 [node name="fx_ice_02" type="AnimatedSprite2D"]
+z_index = 1
 position = Vector2(-1.90735e-06, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ll47r")

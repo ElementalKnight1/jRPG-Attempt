@@ -14,9 +14,9 @@ func _ready():
 	SignalBus.connect("end_of_round", top_of_round)
 	SignalBus.connect("start_next_turn", start_next_turn)
 	#TEST Need to set up the fight in a more generic way
-	add_character("res://test_char_30.tres")
-	add_character("res://test_char_10.tres")
-	add_character("res://test_char.tres")
+	#add_character("res://test_char_30.tres")
+	#add_character("res://test_char_10.tres")
+	#add_character("res://test_char.tres")
 	#add_character("res://blue_slime.tres")
 	add_character("res://data/enemies/red_dragon.tres")
 	add_character("res://data/enemies/test_snake3.tres")
@@ -28,6 +28,16 @@ func _ready():
 	#print(str($Character01.position)) #TEST
 	#print($Enemy01.get_stat("character_type"))
 	#print($Character01.get_stat("character_type"))
+	
+	#FOR TESTING
+	#Will need to set this up a bit more properly later,
+	# to include enemies being loaded in from the SignalBus as well.
+	for tempChar in SignalBus.get_characters("hero"):
+		print(tempChar.get_stat("character_name"))
+		print(str(tempChar.position))
+		tempChar.position = determine_combatant_starting_position(tempChar)
+		print(str(tempChar.position))
+	#print(str(get_viewport().get_visible_rect().size)) #TEST
 	
 	#TEST need to set up color modulation in a more generic (and remembered) way, too
 	#get_node("Character01/CharacterSpritesHair").modulate = Color (randf(),randf(),randf())

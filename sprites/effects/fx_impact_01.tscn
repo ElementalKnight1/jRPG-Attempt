@@ -26,6 +26,7 @@ animations = [{
 }]
 
 [node name="fx_impact_01" type="AnimatedSprite2D"]
+z_index = 1
 position = Vector2(9.53674e-07, 9.53674e-07)
 scale = Vector2(0.15625, 0.15625)
 sprite_frames = SubResource("SpriteFrames_t6l8b")

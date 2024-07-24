@@ -800,6 +800,9 @@ radius = 5.0
 height = 10.0
 
 [node name="Character" type="Node2D"]
+visibility_layer = 3
+z_index = 8
+y_sort_enabled = true
 script = ExtResource("1_8252a")
 stats = ExtResource("2_x4ay6")
 

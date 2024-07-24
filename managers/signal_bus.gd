@@ -175,4 +175,16 @@ func add_character(resource_string = ""):
 	if tempChar.get_stat("character_name") == "TEST Growth Character":
 		tempChar.calculate_all_stats()
 		tempChar.print_character_stats()
+	
+	print_tree_pretty()
+	return tempChar
+
+func get_characters(option:=""):
+	var tempList = []
+	if option == "" or option == "hero":
+		tempList.append_array($Characters/Hero.get_children(false))
+	if option == "" or option == "enemy":
+		tempList.append_array($Characters/Enemy.get_children(false))
+		
+	return tempList
 		

@@ -43,14 +43,15 @@ func _ready():
 	
 	
 	#TEMPORARY TEST just getting a character in on the world map
-	var tempChar = CharacterResource.instantiate()
-	tempChar.load_stats("res://test_char_30.tres")
+	var tempChar = SignalBus.add_character("res://test_char.tres")
+	#tempChar.load_stats("res://test_char.tres")
 	$Characters.add_child(tempChar)
 	currentCharacter = tempChar
-	SignalBus.combatants_dict["hero"].append(tempChar)
+	#SignalBus.combatants_dict["hero"].append(tempChar)
 	
 	#And trying to place 'em somewhere
 	place_character()
+	#tempChar.print_tree_pretty()
 	#print("Character's Position: "+str(currentCharacter.position))
 	#set up camera
 	$Camera2D.make_current()
