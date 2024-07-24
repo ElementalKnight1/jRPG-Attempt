@@ -368,6 +368,7 @@ func add_new_region():
 func add_tile_to_regions(tile,region:int):
 	if tile == null:
 		print("ERROR: Null Tile in the 'add_tile_to_regions' function.")
+		return
 	tile.region = region
 	if regions[region]["count"] == 0:
 		regions[region]["origin"] = tile

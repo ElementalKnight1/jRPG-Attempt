@@ -59,6 +59,7 @@ func add_character(resource_string = ""):
 	if tempChar.get_stat("character_type") == "enemy":
 		tempChar = BattleEnemyResource.instantiate()
 		tempChar.load_stats(resource_string)
+		tempChar.override_sprite()
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
 		#TEST print(tempChar.get_stat("character_name"), " AI: ", tempChar.get_stat("BattleAI"))
 	

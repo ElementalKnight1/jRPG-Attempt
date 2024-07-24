@@ -176,7 +176,7 @@ func add_character(resource_string = ""):
 		tempChar.calculate_all_stats()
 		tempChar.print_character_stats()
 	
-	print_tree_pretty()
+	#print_tree_pretty()
 	return tempChar
 
 func get_characters(option:=""):

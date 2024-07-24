@@ -116,6 +116,6 @@ animations = [{
 }]
 
 [node name="fx_ice_01" type="AnimatedSprite2D"]
-z_index = 1
+z_index = 16
 sprite_frames = SubResource("SpriteFrames_dlved")
 autoplay = "default"

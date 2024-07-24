@@ -21,7 +21,7 @@ animations = [{
 }]
 
 [node name="fx_slash_01" type="AnimatedSprite2D"]
-z_index = 1
+z_index = 16
 sprite_frames = SubResource("SpriteFrames_4rw86")
 autoplay = "default"
 
