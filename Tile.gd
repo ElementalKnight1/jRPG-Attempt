@@ -123,3 +123,10 @@ func set_edges():
 				
 
 	
+
+
+
+
+func _on_area_2d_area_entered(area):
+	print("Collision!") #TEST
+	pass # Replace with function body.

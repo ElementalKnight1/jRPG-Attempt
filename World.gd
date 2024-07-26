@@ -363,6 +363,9 @@ func add_new_region():
 	regions[newRegion]["debug color"] = Color(randf(),randf(),randf(),0.5)
 	regions[newRegion]["neighbor regions"] = []
 	regions[newRegion]["centerpoint"] = Vector2.ZERO
+	#TEST for initial testing and implementation.
+	#eventually we'll want this to be more dynamic, and based on the progression order.
+	regions[newRegion]["encounters"] = [["blue slime"],["blue slime","blue slime"]] 
 	return newRegion
 
 func add_tile_to_regions(tile,region:int):
