@@ -15,7 +15,7 @@ script = ExtResource("1_y48d8")
 texture = ExtResource("2_tavnj")
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_layer = 2
+collision_layer = 6
 input_pickable = false
 monitoring = false
 

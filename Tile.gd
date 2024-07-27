@@ -22,27 +22,34 @@ func _ready():
 	#sprite.modulate = Color(0, 1, 1, 1) if tile_type == TileType.SEA else Color.WHITE
 	if tile_type == TileType.SEA:
 		sprite.texture = load("res://sprites/world/sea_000000000.png")
+		$Area2D.set_collision_layer_value(2,true)
 	elif tile_type == TileType.LAND:
 		sprite.texture = load("res://sprites/world/grass_5.png")
-		$Area2D/CollisionShape2D.set_deferred("disabled",true)
+		#$Area2D/CollisionShape2D.set_deferred("disabled",true)
+		$Area2D.set_collision_layer_value(2,false)
 	else:
 		sprite.texture = load("res://sprites/world/forest_5.png")
-		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+		#$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+		$Area2D.set_collision_layer_value(2,false)
 
 func set_tile_type(newTileType:int):
 	self.tile_type = newTileType
 	if tile_type == TileType.SEA:
 		sprite.texture = load("res://sprites/world/sea_000000000.png")
 		$Area2D/CollisionShape2D.set_deferred("disabled",false)
+		$Area2D.set_collision_layer_value(2,true)
 	elif tile_type == TileType.LAND:
 		sprite.texture = load("res://sprites/world/grass_5.png")
-		$Area2D/CollisionShape2D.set_deferred("disabled",true)
+		#$Area2D/CollisionShape2D.set_deferred("disabled",true)
+		$Area2D.set_collision_layer_value(2,false)
 	elif tile_type == TileType.FOREST:
 		sprite.texture = load("res://sprites/world/forest_5.png")
-		$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+		#$Area2D/CollisionShape2D.set_deferred("disabled",true) #you can walk through it
+		$Area2D.set_collision_layer_value(2,false)
 	elif tile_type == TileType.MOUNTAIN:
 		sprite.texture = load("res://sprites/world/mountain.png")
-		$Area2D/CollisionShape2D.set_deferred("disabled",false)
+		#$Area2D/CollisionShape2D.set_deferred("disabled",false)
+		$Area2D.set_collision_layer_value(2,false)
 	
 
 func does_tile_border_region(region:int):
@@ -123,10 +130,12 @@ func set_edges():
 				
 
 	
-
+func get_encounters():
+	var tempWorld = get_parent().get_parent()
+	return tempWorld.regions[region]["encounters"]
 
 
 
 func _on_area_2d_area_entered(area):
-	print("Collision!") #TEST
+	print("Collision!") #TEST	
 	pass # Replace with function body.

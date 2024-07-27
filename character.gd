@@ -66,7 +66,7 @@ func move(dir):
 		await tween.finished
 		self.isMoving = false
 		if is_protagonist:
-			print("Tiles stood on: " + str(get_tile_stood_on())) #TEST
+			#print("Tiles stood on: " + str(get_tile_stood_on())) #TEST
 			SignalBus.increment_encounter_step_counter()
 	else:
 		play_anim("idle_"+facing) #change facing
@@ -82,7 +82,10 @@ func get_character_size():
 	return temp_size
 
 func get_tile_stood_on():
-	return $Area2D.get_overlapping_areas()
+	if $Area2D.get_overlapping_areas().size() > 0:
+		return $Area2D.get_overlapping_areas()[0].get_parent()
+	else:
+		return null
 	
 func load_stats(filepath):
 	if ResourceLoader.exists(filepath):

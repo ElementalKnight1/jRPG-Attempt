@@ -19,6 +19,7 @@ signal successful_load()
 @export var combatants_dict = {"hero":[],"enemy":[]}
 @export var map_starting_location = Vector2.ONE
 @export var encounter_step_counter:int = 0
+@export var protagonist_character : Node2D
 
 var tileEdgeSubstitutionDictionary = {
 	"000001001":"000001000",
@@ -151,8 +152,12 @@ func increment_encounter_step_counter(ignore_random_encounters:bool=false):
 			print("THE SIGNAL BUS SAYS: IT'S RANDOM ENCOUNTER TIME!") #TEST
 			reset_encounter_step_counter()
 			#determine who we're going to fight
-			
+			var tempTile = protagonist_character.get_tile_stood_on()
+			print("Protagonist is standing on tile: "+str(tempTile))
+			print("  Which is part of Region "+str(tempTile.region)+"...")
+			print(str(tempTile.get_encounters()))
 			#and add them to the Enemy list
+			set_up_encounter(tempTile.get_encounters().pick_random())
 			emit_signal("scene_change",SceneManager.SceneOption.BATTLE)
 
 func reset_encounter_step_counter():
@@ -173,6 +178,9 @@ func add_character(resource_string = ""):
 	elif tempChar.get_stat("character_type") == "hero":	
 		get_node("Characters/Hero").add_child(tempChar)
 		SignalBus.combatants_dict["hero"].append(tempChar)
+		if get_node("Characters/Hero").get_child_count() == 1:
+			protagonist_character = tempChar
+			#Temp - we'll want to be able to set this a bit more dynamically later.
 	
 	#TEST
 	if tempChar.get_stat("character_name") == "TEST Growth Character":
@@ -190,4 +198,12 @@ func get_characters(option:=""):
 		tempList.append_array($Characters/Enemy.get_children(false))
 		
 	return tempList
-		
+
+func set_up_encounter(enemy_array:Array):
+	var tempString = ""
+	for entry in enemy_array:
+		if not entry.begins_with("res://data/enemies/"):
+			tempString = "res://data/enemies/" + entry + ".tres"
+		else:
+			tempString = entry
+		add_character(tempString)

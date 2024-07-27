@@ -33,12 +33,14 @@ func _ready():
 	#Will need to set this up a bit more properly later,
 	# to include enemies being loaded in from the SignalBus as well.
 	for tempChar in SignalBus.get_characters("hero"):
-		print(tempChar.get_stat("character_name"))
-		print(str(tempChar.global_position))
+		#print(tempChar.get_stat("character_name"))
+		#print(str(tempChar.global_position))
 		tempChar.global_position = determine_combatant_starting_position(tempChar)
 		tempChar.isMoving = false
 		tempChar.play_anim("idle_sword_l_1",false)
-		print(str(tempChar.global_position))
+		#print(str(tempChar.global_position))
+	for tempChar in SignalBus.get_characters("enemy"):
+		tempChar.global_position = determine_combatant_starting_position(tempChar)
 	#print(str(get_viewport().get_visible_rect().size)) #TEST
 	
 	#TEST need to set up color modulation in a more generic (and remembered) way, too
