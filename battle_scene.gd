@@ -18,9 +18,10 @@ func _ready():
 	#add_character("res://test_char_10.tres")
 	#add_character("res://test_char.tres")
 	#add_character("res://blue_slime.tres")
-	add_character("res://data/enemies/red_dragon.tres")
-	add_character("res://data/enemies/test_snake3.tres")
-	add_character("res://data/enemies/blue_slime.tres")
+	if SignalBus.get_characters("enemy").size() == 0:
+		add_character("res://data/enemies/red_dragon.tres")
+		add_character("res://data/enemies/test_snake3.tres")
+		add_character("res://data/enemies/blue_slime.tres")
 
 	#$Character01.load_stats("res://test_char_30.tres")
 	#$Enemy01.load_stats("res://test_dragon.tres")
@@ -32,15 +33,19 @@ func _ready():
 	#FOR TESTING
 	#Will need to set this up a bit more properly later,
 	# to include enemies being loaded in from the SignalBus as well.
+	var num_heroes = 0
+	var num_enemies = 0
 	for tempChar in SignalBus.get_characters("hero"):
 		#print(tempChar.get_stat("character_name"))
 		#print(str(tempChar.global_position))
-		tempChar.global_position = determine_combatant_starting_position(tempChar)
+		tempChar.global_position = determine_combatant_starting_position(tempChar, num_heroes)
 		tempChar.isMoving = false
 		tempChar.play_anim("idle_sword_l_1",false)
+		num_heroes += 1
 		#print(str(tempChar.global_position))
 	for tempChar in SignalBus.get_characters("enemy"):
-		tempChar.global_position = determine_combatant_starting_position(tempChar)
+		tempChar.global_position = determine_combatant_starting_position(tempChar, num_enemies)
+		num_enemies += 1
 	#print(str(get_viewport().get_visible_rect().size)) #TEST
 	
 	#TEST need to set up color modulation in a more generic (and remembered) way, too
@@ -88,12 +93,14 @@ func determine_combatant_starting_position(tempChar, num_on_side:=-1):
 	var temp_position = Vector2.ZERO
 	if tempChar.get_stat("character_type") == "hero":
 		var num_heroes = len(SignalBus.combatants_dict["hero"]) - 1
+		if num_on_side != -1: num_heroes = num_on_side
 		
 		temp_position.x = 630 + ((num_heroes % 2) * 48) + floor((num_heroes / 5) * 48)
 		temp_position.y = 176 + ((num_heroes % 5) * 48)
 		
 	elif tempChar.get_stat("character_type") == "enemy":
 		var num_enemies = len(SignalBus.combatants_dict["enemy"]) - 1
+		if num_on_side != -1: num_enemies = num_on_side
 		temp_position.x = 96 + (floor(num_enemies / 3) * 64)
 		temp_position.y = 160 + ((num_enemies % 3) * 64)
 	tempChar.global_position = temp_position #TEST
