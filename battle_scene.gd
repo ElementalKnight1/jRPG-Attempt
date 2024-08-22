@@ -112,6 +112,7 @@ func top_of_round():
 
 func start_next_turn(character):
 	print(character.get_stat("character_name")+"'s Global Position: " + str(character.global_position)) #TEST
+	print(character.get_stat("character_name")+"'s Z Index: " + str(character.z_index)) #TEST z_index
 	#print(character.get_stat("character_type"))
 	if character.get_stat("character_type") == "enemy":
 		#print(character.get_stat("character_name")) #TEST

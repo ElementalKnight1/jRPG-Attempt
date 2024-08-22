@@ -172,6 +172,7 @@ func add_character(resource_string = ""):
 		tempChar.load_stats(resource_string)
 		#print("Adding: "+tempChar.get_stat("character_name")+" as an Enemy.")
 		tempChar.override_sprite()
+		tempChar.z_index = 8 #temp
 		
 		get_node("Characters/Enemy").add_child(tempChar)
 		SignalBus.combatants_dict["enemy"].append(tempChar)
