@@ -29,7 +29,25 @@ func end_of_turn():
 		#print("Time to clean the initiative!")
 		clean_initiative_array()
 	
+	#Check for if we still have heroes and enemies.
+	#If we don't: time to end the combat.
+	#TODO - GET THIS WORKING. 
+	#Might need to refactor how Initiative works a little bit, 
+	#keep a record of fighters even when they're KO'd.
+	var are_there_heroes = false
+	var are_there_enemies = false
+	var character = null
+	for init_tuple in initiative_array:
+		character = init_tuple[0]
+		if character.get_stat("character_type") == "hero": are_there_heroes = true
+		elif character.get_stat("character_type") == "enemy": are_there_enemies = true
+	
 	next_turn()
+	#if are_there_heroes and are_there_enemies:
+		#next_turn()
+	#elif are_there_heroes:
+		#print("COMBAT OVER: The heroes win!")
+	#else: print("COMBAT OVER: The enemies win! ***GAME OVER***")
 
 func next_turn():
 	#visible = false

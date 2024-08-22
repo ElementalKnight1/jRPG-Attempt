@@ -6,6 +6,8 @@ const CharacterResource = preload("res://character.tscn")
 signal start_next_turn(character)
 signal end_of_round()
 signal end_of_turn()
+signal all_enemies_dead()
+signal all_heroes_dead()
 signal do_attack_from_instruction_list(user,target,instruction_list)
 signal character_died(character)
 
