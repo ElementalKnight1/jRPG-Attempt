@@ -5,6 +5,9 @@ const InitiativeTextLabelResource = preload("res://initiative_list_item.tscn")
 var initiative_row_holder = []
 var initiative_array = []
 var characters_to_remove = []
+var all_characters_in_fight = []
+var experience_points_earned = 0
+var money_earned = 0
 
 signal your_turn(character)
 #const font = preload("res://fonts/ManaSeedTitle.ttf")
@@ -24,6 +27,11 @@ func start_new_round():
 	populate_list(initiative_array)
 	highlight_next_up()
 
+func initial_setup():
+	for combatantType in ["hero","enemy"]:
+		for combatant in SignalBus.combatants_dict[combatantType]:
+			add_character(combatant)
+
 func end_of_turn():
 	if not characters_to_remove.is_empty():
 		#print("Time to clean the initiative!")
@@ -36,18 +44,21 @@ func end_of_turn():
 	#keep a record of fighters even when they're KO'd.
 	var are_there_heroes = false
 	var are_there_enemies = false
-	var character = null
-	for init_tuple in initiative_array:
-		character = init_tuple[0]
-		if character.get_stat("character_type") == "hero": are_there_heroes = true
-		elif character.get_stat("character_type") == "enemy": are_there_enemies = true
+	for combatant in all_characters_in_fight:
+		print(combatant) #TEST
+		if is_instance_valid(combatant):
+			print(combatant.get_stat("character_name") + "'s HP: " + str(combatant.get_stat("HP")))
+			if combatant.get_stat("HP") > 0:
+				if combatant.get_stat("character_type") == "hero": are_there_heroes = true
+				elif combatant.get_stat("character_type") == "enemy": are_there_enemies = true
 	
-	next_turn()
-	#if are_there_heroes and are_there_enemies:
-		#next_turn()
-	#elif are_there_heroes:
-		#print("COMBAT OVER: The heroes win!")
-	#else: print("COMBAT OVER: The enemies win! ***GAME OVER***")
+	
+	#next_turn()
+	if are_there_heroes and are_there_enemies:
+		next_turn()
+	elif are_there_heroes:
+		print("COMBAT OVER: The heroes win!")
+	else: print("COMBAT OVER: The enemies win! ***GAME OVER***")
 
 func next_turn():
 	#visible = false
@@ -84,29 +95,18 @@ func create_initiative_list():
 
 func character_died(character):
 	characters_to_remove.append(character)
-	#print("Characters to remove:")
-	#print(characters_to_remove)
-	#print(character.get_stat("character_name")+" has died!")
-	#print(initiative_array)
-	#var i = 0
-	#var indices_to_remove = []
-	#while i < len(initiative_array) - 1:
-		##print("Trying to find them...")
-		#if initiative_array[i][0] == character:
-			#print("FOUND 'EM in the Initiative Array, at position "+str(i))
-			#indices_to_remove.append(i)
-			#
-		#i += 1
-	#for index in indices_to_remove:
-		#initiative_row_holder[i].queue_free()
-		#initiative_row_holder.remove_at(i) #remove it from the UI elements too, which actually controls things.
-		#initiative_array.remove_at(i)
+	#all_characters_in_fight.erase(character)
+
+func add_character(character):
+	if not all_characters_in_fight.has(character):
+		all_characters_in_fight.append(character)
 
 func clean_initiative_array():
 	var i = 0
 	var indices_to_remove = []
 	for character in characters_to_remove:
 		print("I want to remove "+str(character)+" from initiative.")
+		
 		i = 0
 		while i < len(initiative_array):
 			#print("Trying to find them...")

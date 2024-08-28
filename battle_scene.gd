@@ -57,6 +57,7 @@ func _ready():
 	#character_array = [$Character01,$Enemy01,$Enemy02]
 	#SignalBus.combatants_dict["hero"] = [$Character01]
 	#SignalBus.combatants_dict["enemy"] = [$Enemy01,$Enemy02]
+	$InitiativeBox.initial_setup()
 	$InitiativeBox.start_new_round()
 	#$InitiativeBox.print_tree_pretty() #test
 
@@ -111,8 +112,8 @@ func top_of_round():
 	pass
 
 func start_next_turn(character):
-	print(character.get_stat("character_name")+"'s Global Position: " + str(character.global_position)) #TEST
-	print(character.get_stat("character_name")+"'s Z Index: " + str(character.z_index)) #TEST z_index
+	#print(character.get_stat("character_name")+"'s Global Position: " + str(character.global_position)) #TEST
+	#print(character.get_stat("character_name")+"'s Z Index: " + str(character.z_index)) #TEST z_index
 	#print(character.get_stat("character_type"))
 	
 	
