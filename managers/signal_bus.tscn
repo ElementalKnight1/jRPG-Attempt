@@ -14,3 +14,5 @@ script = ExtResource("2_2g3mh")
 [node name="Hero" type="Node" parent="Characters"]
 
 [node name="Enemy" type="Node" parent="Characters"]
+
+[connection signal="all_enemies_dead" from="." to="." method="_on_all_enemies_dead"]

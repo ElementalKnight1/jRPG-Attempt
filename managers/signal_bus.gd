@@ -165,6 +165,8 @@ func increment_encounter_step_counter(ignore_random_encounters:bool=false):
 func reset_encounter_step_counter():
 	encounter_step_counter = 0
 
+
+
 func add_character(resource_string = ""):
 	var tempChar = CharacterResource.instantiate()
 	tempChar.load_stats(resource_string)
@@ -210,3 +212,12 @@ func set_up_encounter(enemy_array:Array):
 		else:
 			tempString = entry
 		add_character(tempString)
+
+
+func _on_all_enemies_dead():
+	change_to_world_map()
+
+func change_to_world_map():
+	#FILL IN with anything we need to do,
+	# to reload the World Map properly from the Battle Scene.
+	emit_signal("scene_change",SceneManager.SceneOption.WORLD_MAP)

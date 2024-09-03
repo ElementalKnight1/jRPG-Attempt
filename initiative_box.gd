@@ -58,7 +58,10 @@ func end_of_turn():
 		next_turn()
 	elif are_there_heroes:
 		print("COMBAT OVER: The heroes win!")
-	else: print("COMBAT OVER: The enemies win! ***GAME OVER***")
+		SignalBus.emit_signal("all_enemies_dead")
+	else: 
+		print("COMBAT OVER: The enemies win! ***GAME OVER***")
+		SignalBus.emit_signal("all_heroes_dead")
 
 func next_turn():
 	#visible = false
