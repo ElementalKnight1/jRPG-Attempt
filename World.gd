@@ -13,6 +13,7 @@ const screen_height = ((TileSize * MAP_SIZE_Y) / 2.0) - (TileSize)
 var tileArray = []
 var currTileArrayX = -1
 var currTileArrayY = -1
+var tileDataArray = []
 
 var continents = {}
 var regions = {}
@@ -92,6 +93,7 @@ func clear_map():
 	continents.clear()
 	regions.clear()
 	tileArray.clear()
+	tileDataArray.clear()
 	progression_order = []
 	currTileArrayX = -1
 	currTileArrayY = -1
@@ -111,6 +113,7 @@ func generate_map():
 		
 		currTileArrayY += 1
 		tileArray.append([])
+		tileDataArray.append([])
 		for m in MAP_SIZE_X:
 			var x = m - MAP_SIZE_X / 2.0
 			nearness_to_edge_x = absi(x) - (MAP_SIZE_X / 2.0)
@@ -124,6 +127,10 @@ func generate_map():
 		#await get_tree().create_timer(0.2).timeout #TEST
 	
 	map_smoother() #smooth out shapes' edges
+	
+	#print(tileDataArray) #TEST
+	for tileDataArrayLine in tileDataArray:
+		print(tileDataArrayLine) #TEST
 	
 	determine_continents() #determine the continents
 	
@@ -149,6 +156,7 @@ func _unhandled_input(event):
 	if event.is_action_pressed("cheat_walk_through_walls"):
 		#toggle walk through walls on or off.
 		currentCharacter.cheat_walk_through_walls = not currentCharacter.cheat_walk_through_walls
+		SignalBus.disable_random_encounters = not SignalBus.disable_random_encounters
 		if currentCharacter.cheat_walk_through_walls:
 			#var tempResource = load("res://initiative_list_item.tscn")
 			add_cheat_label("Walk Through Walls")
@@ -232,7 +240,10 @@ func input_capture():
 
 func generate_terrain_tile(x: int, y: int, nearness_to_edge: int=16):
 	var tile = tile.instantiate()
+	
 	tile.tile_type = altitude_value(x, y, nearness_to_edge)
+	tileDataArray[currTileArrayY].append(tile.tile_type)
+	
 	tile.position = Vector2(x, y) * TileSize
 	$Tiles.add_child(tile)
 	tileArray[currTileArrayY].append(tile)
@@ -505,6 +516,7 @@ func map_smoother():
 			else: #it's on the left or right edge, let's make it just water.
 				tile.set_tile_type(tile.TileType.SEA)
 				#print("Row " + str(smoothingY) + ", Col "+ str(smoothingX) + ": forcing water.")
+			tileDataArray[smoothingY][smoothingX] = tile.tile_type #set the data to match the tile
 		smoothingX = -1
 		#
 #func sort_continents_by_tile_count(a,b):
